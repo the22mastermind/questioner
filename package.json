@@ -1,0 +1,34 @@
+{
+  "name": "questioner",
+  "version": "1.0.0",
+  "description": "Questioner is a meetup questions organizer",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "eslint": "^5.12.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
+  },
+  "scripts": {
+    "test": "test",
+    "start": "nodemon config/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the22mastermind/questioner.git"
+  },
+  "author": "Bertrand Masabo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/the22mastermind/questioner/issues"
+  },
+  "homepage": "https://github.com/the22mastermind/questioner#readme"
+}
