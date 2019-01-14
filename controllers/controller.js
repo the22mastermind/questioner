@@ -209,6 +209,49 @@ function askQuestion(req, res) {
 	}
 }
 
+// User RSVP to meetup
+function rsvpToMeetup(req, res) {
+	const newRSVPId = { id: helper.getNewId(meetups.rsvps) };
+	const { meetupId, userId, response } = req.body;
+	const newUserId = userId;
+	// Find user
+	const findUser = meetups.users.find(user => {
+		return user.id == newUserId;
+	});
+	// Find meetup
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == meetupId;
+	});
+	if(findUser) {
+		if(findMeetup) {
+			const meetup = meetups.meetups.filter(meetup => {
+				return meetup == findMeetup;
+			});
+			const rsvp = { ...newRSVPId, ...findMeetup.id, ...findUser.id, ...response }
+			meetups.rsvps.push(rsvp);
+			const savedRsvp = {
+				meetup: findMeetup.id,
+				topic: findMeetup.topic,
+				staus: response
+			}
+			return res.status(200).json({
+				status: 200,
+				data: savedRsvp
+			});
+		} else {
+			res.status(400).json({
+				status: 400,
+				error: "Meetup not found"
+			});
+		}
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: "User not found"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
@@ -217,5 +260,6 @@ module.exports = {
 	login,
 	userProfile,
 	passwordReset,
-	askQuestion
+	askQuestion,
+	rsvpToMeetup
 }
