@@ -5,6 +5,7 @@ const controller = require('../controllers/controller');
 
 
 router.post("/", controller.askQuestion);
+router.patch("/:id/upvote", controller.upvoteQuestion);
 
 
 module.exports = router

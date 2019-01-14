@@ -13,8 +13,8 @@ function createMeetup(req, res) {
 	};
 	const newMeetup = { ...newId, ...meetup }
 	meetups.meetups.push(newMeetup);
-	return res.status(200).json({
-		status: 200,
+	return res.status(201).json({
+		status: 201,
 		data: meetup
 	});
 }
@@ -45,8 +45,8 @@ function deleteMeetup(req, res) {
 			data: newMeetups
 		});
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "The meetup you are trying to delete does not exist"
 		});
 	}
@@ -75,8 +75,8 @@ function createUser(req, res) {
 	};
 	const newUser = { ...newUserId, ...user, ...username, ...registered, ...isAdmin }
 	meetups.users.push(newUser);
-	return res.status(200).json({
-		status: 200,
+	return res.status(201).json({
+		status: 201,
 		data: newUser
 	});
 }
@@ -92,13 +92,13 @@ function login(req, res) {
 		const user = meetups.users.filter(user => {
 			return user == findUser;
 		});
-		res.status(200).json({
-			status: 200,
+		res.status(201).json({
+			status: 201,
 			data: user
 		});
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "Invalid username or password"
 		});
 	}	
@@ -120,8 +120,8 @@ function userProfile(req, res) {
 			data: user
 		});
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "User not found"
 		});
 	}	
@@ -144,14 +144,14 @@ function passwordReset(req, res) {
 				message: "Password reset successfully"
 			});
 		} else {
-			res.status(400).json({
-				status: 400,
+			res.status(404).json({
+				status: 404,
 				error: "User not found"
 			});
 		}
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "Make sure your passwords match"
 		});
 	}
@@ -191,19 +191,19 @@ function askQuestion(req, res) {
 				title: question.title,
 				body: question.body
 			}
-			return res.status(200).json({
-				status: 200,
+			return res.status(201).json({
+				status: 201,
 				data: savedQuestion
 			});
 		} else {
-			res.status(400).json({
-				status: 400,
+			res.status(404).json({
+				status: 404,
 				error: "Meetup not found"
 			});
 		}
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "User not found"
 		});
 	}
@@ -234,20 +234,60 @@ function rsvpToMeetup(req, res) {
 				topic: findMeetup.topic,
 				staus: response
 			}
-			return res.status(200).json({
-				status: 200,
+			return res.status(201).json({
+				status: 201,
 				data: savedRsvp
 			});
 		} else {
-			res.status(400).json({
-				status: 400,
+			res.status(404).json({
+				status: 404,
 				error: "Meetup not found"
 			});
 		}
 	} else {
-		res.status(400).json({
-			status: 400,
+		res.status(404).json({
+			status: 404,
 			error: "User not found"
+		});
+	}
+}
+
+// User upvote a question
+function upvoteQuestion(req, res) {
+	const { questionId, meetupId } = req.body;
+	// Find the question to upvote
+	const findQuestion = meetups.questions.find(question => {
+		return question.id == questionId;
+	});
+	// Get previous votes if any and increment by 1
+	const votes = findQuestion.votes + 1;
+	// Find the meetup the question belongs to
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == meetupId;
+	});
+	if(findQuestion){
+		if(findMeetup) {
+			// Set question votes to new updated vote
+			findQuestion.votes = votes;
+			return res.status(200).json({
+				status: 200,
+				data: {
+					meetup: findMeetup.id,
+					title: findQuestion.title,
+					body: findQuestion.body,
+					votes: findQuestion.votes
+				}
+			});
+		} else {
+			res.status(404).json({
+				status: 404,
+				error: "Meetup not found"
+			});
+		}
+	} else {
+		res.status(404).json({
+			status: 404,
+			error: "Question not found"
 		});
 	}
 }
@@ -261,5 +301,6 @@ module.exports = {
 	userProfile,
 	passwordReset,
 	askQuestion,
-	rsvpToMeetup
+	rsvpToMeetup,
+	upvoteQuestion
 }

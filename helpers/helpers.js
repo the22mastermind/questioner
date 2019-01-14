@@ -16,8 +16,22 @@ const getVotes = (array) => {
     }
 };
 
+const upvote = (array) => {
+    return array[array.length - 1].votes + 1
+};
+
+const downvote = (array) => {
+    if (array.length > 0) {
+        return array[array.length - 1].votes - 1
+    } else {
+        return 0
+    }
+};
+
 module.exports = {
     getNewId,
     newDate,
-    getVotes
+    getVotes,
+    upvote,
+    downvote
 };
