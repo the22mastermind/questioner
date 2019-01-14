@@ -292,6 +292,46 @@ function upvoteQuestion(req, res) {
 	}
 }
 
+// User downvote a question
+function downvoteQuestion(req, res) {
+	const { questionId, meetupId } = req.body;
+	// Find the question to upvote
+	const findQuestion = meetups.questions.find(question => {
+		return question.id == questionId;
+	});
+	// Get previous votes if any and decrement by 1
+	const votes = findQuestion.votes - 1;
+	// Find the meetup the question belongs to
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == meetupId;
+	});
+	if(findQuestion){
+		if(findMeetup) {
+			// Set question votes to new updated vote
+			findQuestion.votes = votes;
+			return res.status(200).json({
+				status: 200,
+				data: {
+					meetup: findMeetup.id,
+					title: findQuestion.title,
+					body: findQuestion.body,
+					votes: findQuestion.votes
+				}
+			});
+		} else {
+			res.status(404).json({
+				status: 404,
+				error: "Meetup not found"
+			});
+		}
+	} else {
+		res.status(404).json({
+			status: 404,
+			error: "Question not found"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
@@ -302,5 +342,6 @@ module.exports = {
 	passwordReset,
 	askQuestion,
 	rsvpToMeetup,
-	upvoteQuestion
+	upvoteQuestion,
+	downvoteQuestion
 }
