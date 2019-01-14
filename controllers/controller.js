@@ -157,6 +157,58 @@ function passwordReset(req, res) {
 	}
 }
 
+// User ask question
+function askQuestion(req, res) {
+	const newQuestionId = { id: helper.getNewId(meetups.questions) };
+	const { title, body, createdBy, meetupId } = req.body;
+	const question = {
+		title,
+		body
+	};
+	const userId = createdBy;
+	const createdOn = {
+		createdOn: new Date().toString()
+	};
+	const votes = { votes: helper.getVotes(meetups.questions) };
+	// Find user
+	const findUser = meetups.users.find(user => {
+		return user.id == userId;
+	});
+	// Find meetup
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == meetupId;
+	});
+	if(findUser) {
+		if(findMeetup) {
+			const meetup = meetups.meetups.filter(meetup => {
+				return meetup == findMeetup;
+			});
+			const newQuestion = { ...newQuestionId, ...createdOn, ...findUser.id, ...findMeetup.id, ...question, ...votes }
+			meetups.questions.push(newQuestion);
+			const savedQuestion = {
+				user: findUser.id,
+				meetup: findMeetup.id,
+				title: question.title,
+				body: question.body
+			}
+			return res.status(200).json({
+				status: 200,
+				data: savedQuestion
+			});
+		} else {
+			res.status(400).json({
+				status: 400,
+				error: "Meetup not found"
+			});
+		}
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: "User not found"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
@@ -164,5 +216,6 @@ module.exports = {
 	createUser,
 	login,
 	userProfile,
-	passwordReset
+	passwordReset,
+	askQuestion
 }
