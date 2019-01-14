@@ -6,6 +6,7 @@ const controller = require('../controllers/controller');
 
 router.post("/", controller.createMeetup);
 router.get("/", controller.viewAllMeetups);
+router.get("/:id", controller.viewMeetupDetails);
 router.delete("/:id", controller.deleteMeetup);
 
 // Routes

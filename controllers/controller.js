@@ -332,6 +332,25 @@ function downvoteQuestion(req, res) {
 	}
 }
 
+// User view specific meetup details
+function viewMeetupDetails(req, res) {
+	let { id } = req.params;
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == id;
+	});
+	if(findMeetup) {
+		res.status(200).json({
+			status: 200,
+			data: findMeetup
+		});
+	} else {
+		res.status(404).json({
+			status: 404,
+			error: "The meetup you are trying to view does not exist"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
@@ -343,5 +362,6 @@ module.exports = {
 	askQuestion,
 	rsvpToMeetup,
 	upvoteQuestion,
-	downvoteQuestion
+	downvoteQuestion,
+	viewMeetupDetails
 }
