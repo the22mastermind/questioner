@@ -1,5 +1,7 @@
 const meetups = require('../models/models');
 const helper = require('../helpers/helpers');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // Create a meetup
 function createMeetup(req, res) {
@@ -335,21 +337,36 @@ function downvoteQuestion(req, res) {
 // User view specific meetup details
 function viewMeetupDetails(req, res) {
 	let { id } = req.params;
-	const findMeetup = meetups.meetups.find(meetup => {
-		return meetup.id == id;
-	});
-	if(findMeetup) {
-		res.status(200).json({
-			status: 200,
-			data: findMeetup
+	if (Number.isInteger(parseInt(id))) {
+		const findMeetup = meetups.meetups.find(meetup => {
+			return meetup.id == id;
 		});
-	} else {
-		res.status(404).json({
-			status: 404,
-			error: "The meetup you are trying to view does not exist"
-		});
+		if(findMeetup) {
+			res.status(200).json({
+				status: 200,
+				data: findMeetup
+			});
+		} else {
+			res.status(404).json({
+				status: 404,
+				error: "The meetup you are trying to view does not exist"
+			});
+		}
+	} else{
+		if (id === 'upcoming') {
+			res.status(200).json({
+				status: 200,
+				data: meetups.meetups
+			});
+		} else {
+			res.status(404).json({
+				status: 404,
+				error: "The meetup you are trying to view does not exist"
+			});
+		}
 	}
 }
+
 
 module.exports = {
 	createMeetup,
