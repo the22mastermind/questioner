@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Questioner">
+    <meta name="author" content="TheMasterMind">
+    <meta name="keywords" content="Questioner, questioner, Meetup, Andela, Andela Kigali, Bertrand Masabo">
+	<title>Meetup detail | Questioner</title>
+	<link rel="stylesheet" type="text/css" href="../css/styles.css">
+	<link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/custom.js"></script>
+</head>
+<body>
+	<nav>
+		<div class="home"><a href="../index.html">Questioner</a></div>
+		<button class="navbtn" data-toggle="collapse" data-target="#top-nav-links">
+		    <i class="fa fa-bars"></i>
+		</button>
+		<ul class="top-nav-links">
+			<li><a href="meetups.html">Meetups</a> </li>
+			<li><a href="signup.html">Sign Up</a> </li>
+			<li><a href="signin.html">Sign In</a> </li>
+		</ul>
+	</nav>
+	<div id="mobile-nav-links-wrapper">
+		<div class="mobile-nav-links-subwrapper">
+			<ul class="mobile-nav-links">
+				<li><a href="meetups.html">Meetups</a> </li>
+				<li><a href="signup.html">Sign Up</a> </li>
+				<li><a href="signin.html">Sign In</a> </li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="feed smalltop">
+			<div class="dialog-box">
+				<div class="close"><a href="#" id="close"><i class="fa fa-times"></i></a></div>
+				<p class="dialog-message">This is a dialog box showing a message to the user.</p>
+			</div>
+		</div>
+
+		<div class="feed nobottom">
+			<div class="q-full-width">
+				<div class="meetup_card_wrapper">
+					<div class="meetup_cover auto">
+						<div class="meetup_card_cover"></div>
+					</div>
+					<h3>Meetup Description</h3>
+					<div class="meetup_detail_desc"></div>
+					<div class="comments">
+						<a  href="#" class="rsvp">RSVP</a>
+						<a href="#" class="question-form-toggler">Ask question</a>
+						<div class="question-form-wrapper">
+							<form action="" method="" id="question-form">
+								<input type="hidden" name="meetup_id" value="meetup_id">
+								<textarea form="question-form" rows="5" cols="40" name="question" placeholder="Type question here"></textarea>
+								<input type="submit" value="Submit">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="feed">
+			<div class="q-full-width">
+				<h3>Questions feed</h3>
+				<div class="meetup_card_wrapper">
+					<div class="meetup_cover auto flex autoheight">
+						<div class="meetup_card_details question_card_wrapper auto">
+							<div class="question-header">
+								<div class="meetup-topic">Question title</div>
+								<div class="question-date">21/01/2019 18:59</div>
+							</div>
+							<div class="question-body">Is it possible to RSVP for 5 people?</div>
+							<div class="question-creator">asked by: <span class="bold"><a class="highlight" href="dashboard.html">John Doe</a></span></div>
+						</div>
+						<div class="container nobottom meetup_card_actions auto row-actions">
+							<a href="#" class="mrgn profile-actions"><i class="fa fa-thumbs-up"></i> <span id="upvote">Upvote</span></a>
+							<span class="votes nomarg">254</span>
+							<a href="#" class="mrgn profile-actions"><i class="fa fa-thumbs-down"></i> <span id="downvote">Downvote</span></a>
+						</div>
+					</div>
+					<div class="comments">
+						<a href="#" class="question-form-toggler noleft">Add comment</a>
+						<a href="#" class="hide-comments-toggler">Hide comments</a>
+						<div class="question-form-wrapper">
+							<form action="" method="" id="question-form">
+								<input type="hidden" name="meetup_id" value="meetup_id">
+								<textarea form="question-form" rows="5" cols="40" name="question" placeholder="Type comment here"></textarea>
+								<input type="submit" value="Submit">
+							</form>
+						</div>
+					</div>
+					<!-- Comment -->
+					<div class="meetup_card_wrapper commented smallleft smalltop">
+						<div class="meetup_cover meetup_cover_comment autoheight auto flex">
+							<div class="meetup_card_details noback question_card_wrapper auto nopadd">
+								<div class="question-header">
+									<div class="meetup-topic">Question title</div>
+									<div class="question-date">21/01/2019 19:05</div>
+								</div>
+								<div class="question-body">Yes it possible. Just make sure you do it early because seats are limited.</div>
+								<div class="question-creator">replied by: <span class="bold"><a class="highlight" href="dashboard.html">Event Coordinator</a></span></div>
+							</div>
+						</div>
+						<div class="comments">
+							<a href="#" class="question-form-toggler noleft">Add comment</a>
+							<div class="question-form-wrapper">
+								<form action="" method="" id="question-form">
+									<input type="hidden" name="meetup_id" value="meetup_id">
+									<textarea form="question-form" rows="5" cols="40" name="question" placeholder="Type comment here"></textarea>
+									<input type="submit" value="Submit">
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- End of comment -->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
