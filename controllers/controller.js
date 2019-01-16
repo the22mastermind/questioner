@@ -127,11 +127,42 @@ function userProfile(req, res) {
 	}	
 }
 
+// User password reset
+function passwordReset(req, res) {
+	const { username, password, confirmPassword } = req.body;
+	const findUser = meetups.users.find(user => {
+		return user.username == username;
+	});
+	if(password === confirmPassword){
+		if(findUser) {
+			const user = meetups.users.filter(user => {
+				return user == findUser;
+			});
+			res.status(200).json({
+				status: 200,
+				data: user,
+				message: "Password reset successfully"
+			});
+		} else {
+			res.status(400).json({
+				status: 400,
+				error: "User not found"
+			});
+		}
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: "Make sure your passwords match"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
 	deleteMeetup,
 	createUser,
 	login,
-	userProfile
+	userProfile,
+	passwordReset
 }
