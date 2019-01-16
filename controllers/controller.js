@@ -25,7 +25,32 @@ function viewAllMeetups(req, res) {
 	});
 }
 
+function deleteMeetup(req, res) {
+	let { id } = req.params;
+	const findMeetup = meetups.meetups.find(meetup => {
+		return meetup.id == id;
+	});
+	if(findMeetup) {
+		const newMeetups = meetups.meetups.filter(meetup => {
+			return meetup !== findMeetup;
+		});
+		console.log("+++ ", newMeetups);
+		meetups.meetups = newMeetups;
+		console.log("--- ", meetups.meetups);
+		res.status(200).json({
+			status: 200,
+			data: newMeetups
+		});
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: "The meetup you are trying to delete does not exist"
+		});
+	}
+}
+
 module.exports = {
 	createMeetup,
-	viewAllMeetups
+	viewAllMeetups,
+	deleteMeetup
 }
