@@ -1,6 +1,10 @@
-const express = require('express')
-const router = express.Router()
-// const meetup = require('../models/meetup.model')
-// const m = require('../controllers/middlewares')
-// Routes
+const express = require('express');
+const router = express.Router();
+const models = require('../models/models')
+const controller = require('../controllers/controller');
+
+
+router.post("/", controller.createUser);
+
+
 module.exports = router
