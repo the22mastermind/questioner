@@ -104,10 +104,34 @@ function login(req, res) {
 	}	
 }
 
+// User profile view
+function userProfile(req, res) {
+	const { username, password } = req.body;
+	const findUser = meetups.users.find(user => {
+		return user.username == username;
+	});
+
+	if(findUser) {
+		const user = meetups.users.filter(user => {
+			return user == findUser;
+		});
+		res.status(200).json({
+			status: 200,
+			data: user
+		});
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: "User not found"
+		});
+	}	
+}
+
 module.exports = {
 	createMeetup,
 	viewAllMeetups,
 	deleteMeetup,
 	createUser,
-	login
+	login,
+	userProfile
 }
