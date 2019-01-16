@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/the22mastermind/questioner/issues"
   },
-  "homepage": "https://github.com/the22mastermind/questioner#readme"
+  "homepage": "https://github.com/the22mastermind/questioner#readme",
+  "engines": {
+    "node": "8.14.0"
+  }
 }
