@@ -118,17 +118,6 @@ function createUser(req, res) {
 		password,
 		isAdmin
 	} = req.body;
-	const user = {
-		firstname,
-		lastname,
-		othername,
-		email,
-		phoneNumber,
-		username,
-		password,
-		registered: new Date().toString(),
-		isAdmin
-	};
 	const newUser = {
 		id,
 		firstname,
@@ -236,7 +225,6 @@ function askQuestion(req, res) {
 		meetupId
 	} = req.body;
 	const createdOn = new Date().toString();
-	const votes = helper.getVotes(meetups.questions);
 	// Find user
 	const user = meetups.users.find(u => u.id === parseInt(createdBy, 10));
 	// Find meetup
@@ -262,7 +250,6 @@ function askQuestion(req, res) {
 		meetup: meetup.id,
 		title,
 		body,
-		votes,
 		upvotes: 0,
 		downvotes: 0
 	};
@@ -360,7 +347,7 @@ function upvoteQuestion(req, res) {
 		return;
 	}
 	// Increment question's votes by 1
-	question.votes += 1;
+	question.upvotes += 1;
 	// Return updated question
 	res.json({
 		status: 200,
@@ -368,7 +355,7 @@ function upvoteQuestion(req, res) {
 			meetup: meetup.id,
 			title: question.title,
 			body: question.body,
-			votes: question.votes
+			votes: question.upvotes
 		}]
 	});
 }
@@ -405,7 +392,7 @@ function downvoteQuestion(req, res) {
 		return;
 	}
 	// Decrement question's votes by 1
-	question.votes -= 1;
+	question.downvotes -= 1;
 	// Return updated question
 	res.json({
 		status: 200,
@@ -413,7 +400,7 @@ function downvoteQuestion(req, res) {
 			meetup: meetup.id,
 			title: question.title,
 			body: question.body,
-			votes: question.votes
+			votes: question.downvotes
 		}]
 	});
 }

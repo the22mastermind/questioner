@@ -1,18 +1,5 @@
 const Joi = require('joi');
 
-
-function mustBeInteger(req, res, next) {
-    const id = req.params.id;
-    if (!Number.isInteger(parseInt(id))) {
-        res.status(400).json({ 
-            status: 400,
-            message: 'ID parameter in url must be an integer'
-        });
-    } else {
-        next();
-    }
-}
-
 function validateSignUp(user) {
     const schema = {
         firstname: Joi.string().min(3).max(30).required(),
@@ -83,7 +70,6 @@ function validateComment(comment) {
 }
 
 module.exports = {
-    mustBeInteger,
     validateSignUp,
     validateSignIn,
     validateMeetup,

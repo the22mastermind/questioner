@@ -940,8 +940,11 @@ form > textarea {
 	flex-direction: column!important;
 	text-align: center;
 }
-
 .fullwidth {
 	width: 100%!important;
 }
-
+.fa-thumbs-up,
+.fa-thumbs-down {
+	font-size: 12pt!important;
+	margin-right: 5px;
+}

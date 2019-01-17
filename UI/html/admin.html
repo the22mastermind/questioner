@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Questioner">
+    <meta name="author" content="TheMasterMind">
+    <meta name="keywords" content="">
+	<title>Admin Dashboard | Questioner</title>
+	<link rel="stylesheet" type="text/css" href="../css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="../css/admin.css">
+	<link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/custom.js"></script>
+	<script type="text/javascript" src="../js/admin.js"></script>
+</head>
+<body>
+	<nav>
+		<div class="home"><a href="../index.html">Questioner</a></div>
+		<button class="navbtn" data-toggle="collapse" data-target="#top-nav-links">
+		    <i class="fa fa-bars"></i>
+		</button>
+		<ul class="top-nav-links">
+			<li id="wlcm">Welcome, Admin </li>
+			<li><a href="meetups.html">Meetups</a> </li>
+			<li><a href="../index.html">Sign Out</a> </li>
+		</ul>
+	</nav>
+	<div id="mobile-nav-links-wrapper">
+		<div class="mobile-nav-links-subwrapper">
+			<ul class="mobile-nav-links">
+				<li id="wlcm">Welcome, Admin </li>
+				<li><a href="meetups.html">Meetups</a> </li>
+				<li><a href="../index.html">Sign Out</a> </li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="feed smalltop smallbottom">
+			<div class="dialog-box">
+				<div class="close"><a href="#" id="close"><i class="fa fa-times"></i></a></div>
+				<p class="dialog-message">This is a dialog box showing a message to the user.</p>
+			</div>
+		</div>
+		<h3 class="dashboard-title">Admin Dashboard</h3>
+		<div class="feed" id="flexcol">
+			<div class="dashboard-menu">
+				<div>
+					<ul class="no-list-style">
+						<li>
+							<button id="upcoming" class="dashboard-menu-btn">Create Meetup</button>
+						</li>
+						<li>
+							<button id="mymeetups" class="dashboard-menu-btn">My Meetups</button>
+						</li>
+						<li class="nobottom">
+							<button id="profile" class="dashboard-menu-btn">Profile</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="dashboard-content">
+
+				<div id="upcoming-content" class="smallmargin">
+					<div class="q-full-width">
+						<div class="admin-form-wrapper smalltop">
+							<h3>Create new meetup</h3>
+							<form action="" method="" enctype="multipart" id="meetupform">
+								<input type="text" name="meetup_topic" placeholder="Meetup topic">
+								<input type="date" name="meetup_date" placeholder="Meetup date">
+								<input type="time" name="meetup_time" placeholder="Meetup time">
+								<input type="text" name="meetup_loc" placeholder="Meetup location">
+								<input type="text" name="meetup_tags" placeholder="Meetup tags" autocomplete="on">
+								<input type="file" name="meetup_images" accept="image/*" multiple="true">
+								<input type="submit" value="Create">
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div id="mymeetups-content" class="smallmargin">
+					<div class="q-full-width">
+						<div class="admin_meetup_list">
+							<div>
+								<h3>Meetups</h3>
+								<div class="meetup_card_wrapper">
+									<div class="meetup_card autoheight">
+										<div class="meetup_card_details fullwidth smallpadd">
+											<table>
+												<tr>
+													<td class="bold">Topic:</td>
+													<td class="smallestleft">Artifical Inteligence and IOT</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Organizer:</td>
+													<td class="smallestleft">Carnegie Melon University, Kigali Campus</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Date:</td>
+													<td class="smallestleft">Tuesday, Jan 8th, 2019 | 10:00 CAT</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Duration:</td>
+													<td class="smallestleft">2h (10:00 - 12:00)</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Location:</td>
+													<td class="smallestleft">Carnegie Melon University, Kigali Campus, Auditorium</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">RSVPs:</td>
+													<td class="smallestleft">34</td>
+												</tr>
+											</table>
+										</div>
+										<div class="delete-action meetup_card_actions autoheight admin-actions">
+											<button type="button" class="meetup_detail auto-width" data-url="meetup_details.html">Details</button>
+											<form action="" method="">
+												<input type="hidden" value="meetup_id" name="meetup_id">
+												<input type="submit" class="auto-width"  value="Delete">
+											</form>
+										</div>
+									</div>
+									<div class="comments">
+										<a href="#" class="question-list-toggler noleft">Add images</a>
+										<a href="#" class="question-form-toggler">Add tags</a>
+										<div class="question-form-wrapper">
+											<form action="" method="" id="question-form">
+												<input type="hidden" name="meetup_id" value="meetup_id">
+												<input type="text" name="tags" placeholder="Add a tag">
+												<input type="submit" value="Submit">
+											</form>
+										</div>
+										<div class="images-form-wrapper">
+											<form action="" method="" id="question-form">
+												<input type="hidden" name="meetup_id" value="meetup_id">
+												<input type="file" name="meetup_images" accept="image/*" multiple="true">
+												<input type="submit" value="Submit">
+											</form>
+										</div>
+									</div>
+								</div>
+
+								<div class="meetup_card_wrapper">
+									<div class="meetup_card autoheight">
+										<div class="meetup_card_details fullwidth smallpadd">
+											<table>
+												<tr>
+													<td class="bold">Topic:</td>
+													<td class="smallestleft">Web Development Best Practices</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Organizer:</td>
+													<td class="smallestleft">Andela Kigali</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Date:</td>
+													<td class="smallestleft">Friday, Jan 11th, 2019 | 8:30 CAT</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Duration:</td>
+													<td class="smallestleft">2h 30min (08:30 - 11:00)</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">Location:</td>
+													<td class="smallestleft">Telecom House, Basement, Room 1</td>
+												</tr>
+												<tr class="smallfont">
+													<td class="bold">RSVPs:</td>
+													<td class="smallestleft">20</td>
+												</tr>
+											</table>
+										</div>
+
+										<div class="delete-action meetup_card_actions autoheight admin-actions">
+											<button type="button" class="meetup_detail auto-width" data-url="meetup_details.html">Details</button>
+											<form action="" method="">
+												<input type="hidden" value="meetup_id" name="meetup_id">
+												<input type="submit" class="auto-width" value="Delete">
+											</form>
+										</div>
+									</div>
+									<div class="comments">
+										<a href="#" class="question-list-toggler noleft">Add images</a>
+										<a href="#" class="question-form-toggler">Add tags</a>
+										<div class="question-form-wrapper">
+											<form action="" method="" id="question-form">
+												<input type="hidden" name="meetup_id" value="meetup_id">
+												<input type="text" name="tags" placeholder="Add a tag">
+												<input type="submit" value="Submit">
+											</form>
+										</div>
+										<div class="images-form-wrapper">
+											<form action="" method="" id="question-form">
+												<input type="hidden" name="meetup_id" value="meetup_id">
+												<input type="file" name="meetup_images" accept="image/*" multiple="true">
+												<input type="submit" value="Submit">
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="profile-content" class="smallmargin">
+					<div class="avatar"></div>
+					<div class="">
+						<div>
+							<p class="bold">First Name  Last Name</p>
+							<p>email@gmail.com</p>
+							<p>+250 xxx xxx xxx</p>
+						</div>
+						<div>
+							<p>12 Meetups posted.</p>
+							<p>100 RSVPs.</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

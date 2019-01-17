@@ -1,25 +1,23 @@
 const chaiHttp = require('chai-http');
 const chai = require('chai');
-// const { expect } = require('chai');
-let should = chai.should();
-let server = require('../config/index');
+
+const should = chai.should();
 chai.use(chaiHttp);
-const meetups = require('../models/models');
+const server = require('../config/index');
 
 // CREATE A MEETUP
-describe("/POST create a new meetup", ()=>{
-	it("Should create a new meetup", ()=>{
-		let meetup = {
-			topic: "Andela Bootcamp",
-			location: "Westerwelle Startup",
-			happeningOn: "01/22/2019",
-			tags: "Git, Coding"
+describe('/POST create a new meetup', () => {
+	it('Should create a new meetup', () => {
+		const meetup = {
+			topic: 'Andela Bootcamp',
+			location: 'Westerwelle Startup',
+			happeningOn: '01/22/2019',
+			tags: 'Git, Coding'
 		};
 		chai.request(server)
 			.post('/api/v1/meetups')
 			.send(meetup)
-			.end((err,res)=>{
-				// console.log(res.body.data[0].topic);
+			.end((err, res) => {
 				res.should.have.status(201);
 				res.body.data.should.be.a('array');
 				res.body.data[0].should.have.property('topic');
@@ -30,32 +28,33 @@ describe("/POST create a new meetup", ()=>{
 				res.body.data[0].topic.should.be.equal('Andela Bootcamp');
 				res.body.data[0].location.should.be.equal('Westerwelle Startup');
 				res.body.data[0].happeningOn.should.be.equal('01/22/2019');
-			})
-	})
-})
+				res.body.data[0].happeningOn.should.be.a('string');
+			});
+	});
+});
 
 // FETCH ALL MEETUPS
-describe("/GET all meetups", ()=>{
-	it("Should fetch all meetups", ()=>{
+describe('/GET all meetups', () => {
+	it('Should fetch all meetups', () => {
 		chai.request(server)
 			.get('/api/v1/meetups')
-			.end((err,res)=>{
+			.end((err, res) => {
 				res.should.have.status(200);
 				res.body.should.be.a('object');
 				res.type.should.equal('application/json');
 				res.body.data[0].should.include.keys(
 					'id', 'topic', 'location', 'happeningOn', 'tags'
 				);
-			})
-	})
-})
+			});
+	});
+});
 
 // FETCH SPECIFIC MEETUP
-describe("/GET a specific meetup by id", ()=>{
-	it("Should fetch a specific meetup", ()=>{
+describe('/GET a specific meetup by id', () => {
+	it('Should fetch a specific meetup', () => {
 		chai.request(server)
 			.get('/api/v1/meetups/2')
-			.end((err,res)=>{
+			.end((err, res) => {
 				if (res.body.error) {
 					res.should.have.status(404);
 					return;
@@ -65,30 +64,30 @@ describe("/GET a specific meetup by id", ()=>{
 				res.body.data.should.include.keys(
 					'id', 'topic', 'location', 'happeningOn', 'tags'
 				);
-			})
-	})
-})
+			});
+	});
+});
 
 // DELETE AN EXISTING MEETUP
-describe("/DELETE delete a meetup", ()=>{
-	it("Should delete a meetup", ()=>{
+describe('/DELETE delete a meetup', () => {
+	it('Should delete a meetup', () => {
 		chai.request(server)
 			.delete('/api/v1/meetups/1')
-			.end((err,res)=>{
+			.end((err, res) => {
 				res.should.have.status(200);
 				res.body.should.be.a('object');
-			})
-	})
-})
+			});
+	});
+});
 
 // FETCH UPCOMING MEETUPS
-describe("/GET upcoming meetups", ()=>{
-	it("Should fetch upcoming meetups", ()=>{
+describe('/GET upcoming meetups', () => {
+	it('Should fetch upcoming meetups', () => {
 		chai.request(server)
 			.get('/api/v1/meetups/upcoming')
-			.end((err,res)=>{
+			.end((err, res) => {
 				res.should.have.status(200);
 				res.body.should.be.a('object');
-			})
-	})
-})
+			});
+	});
+});

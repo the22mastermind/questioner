@@ -1,9 +1,8 @@
-const meetups = []
-const questions = []
-const comments = []
-const rsvps = []
-const users = []
-
+const meetups = [];
+const questions = [];
+const comments = [];
+const rsvps = [];
+const users = [];
 
 module.exports = {
 	meetups,
@@ -11,4 +10,4 @@ module.exports = {
 	comments,
 	rsvps,
 	users
-}
+};

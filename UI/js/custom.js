@@ -14,18 +14,18 @@ $(document).ready(function(){
 		$(".images-form-wrapper").css("display", "none");
 		// $(this).next(".question-form-wrapper").toggle();
 		$(this).closest(".comments").children(".question-form-wrapper").toggle();
-		$('html, body').animate({
-			scrollTop: $(this).offset().top
-		}, 2000);
+		// $('html, body').animate({
+		// 	scrollTop: $(this).offset().top
+		// }, 2000);
 	});
 	// Collapse add images to meetup form
 	$(".question-list-toggler").click(function(){
 		$(".question-form-wrapper").css("display", "none");
 		// $(".images-form-wrapper").css("display", "block");
 		$(this).closest(".comments").children(".images-form-wrapper").toggle();
-		$('html, body').animate({
-			scrollTop: $(".images-form-wrapper").offset().top
-		}, 2000);
+		// $('html, body').animate({
+		// 	scrollTop: $(".images-form-wrapper").offset().top
+		// }, 2000);
 	});
 
 	// Close dialog box
