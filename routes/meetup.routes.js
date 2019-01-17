@@ -8,6 +8,7 @@ router.post("/", controller.createMeetup);
 router.get("/", controller.viewAllMeetups);
 router.get("/:id", controller.viewMeetupDetails);
 router.delete("/:id", controller.deleteMeetup);
+router.post("/:id/rsvps", controller.rsvpToMeetup);
 
 // Routes
 module.exports = router

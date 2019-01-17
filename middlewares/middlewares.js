@@ -1,6 +1,8 @@
+const Joi = require('joi');
+
+
 function mustBeInteger(req, res, next) {
     const id = req.params.id;
-
     if (!Number.isInteger(parseInt(id))) {
         res.status(400).json({ 
             status: 400,
@@ -9,51 +11,84 @@ function mustBeInteger(req, res, next) {
     } else {
         next();
     }
-
 }
 
-function validateMeetup(req, res, next) {
-    const { topic, location, happeningOn, tags } = req.body;
-
-    if (topic && location && happeningOn && tags) {
-        next();
-    } else {
-        res.status(400).json({ 
-            status: 400,
-            message: 'Topic, Location, HappeningOn and Tags fields are required!'
-        });
-    }
+function validateSignUp(user) {
+    const schema = {
+        firstname: Joi.string().min(3).max(30).required(),
+        lastname: Joi.string().min(3).max(30).required(),
+        othername: Joi.string().min(3).max(30).optional(),
+        email: Joi.string().email().required(),
+        phoneNumber: Joi.string().min(10).max(15).required(),
+        username: Joi.string().min(3).max(30).required(),
+        password: Joi.string().min(8).max(15).required(),
+        isAdmin: Joi.boolean().required()
+    };
+    return Joi.validate(user, schema);
 }
 
-function validateQuestion(req, res, next) {
-    const { title, body } = req.body;
-
-    if (title && body) {
-        next();
-    } else {
-        res.status(400).json({ 
-            status: 400,
-            message: 'Title and body fields are required!'
-        });
-    }
+function validateMeetup(meetup) {
+    const schema = {
+        topic: Joi.string().min(5).required(),
+        location: Joi.string().min(5).required(),
+        happeningOn: Joi.date().min('now').required(),
+        tags: Joi.string().max(80)
+    };
+    return Joi.validate(meetup, schema);
 }
 
-function validateRSVP(req, res, next) {
-    const { status } = req.body;
+function validateQuestion(question) {
+    const schema = {
+        // user: Joi.number().integer().required(),
+        // meetup: Joi.number().integer().required(),
+        title: Joi.string().min(3).required(),
+        body: Joi.string().min(5).required(),
+        createdBy: Joi.number().positive().required(),
+        meetupId: Joi.number().positive().required()
+    };
+    return Joi.validate(question, schema);
+}
 
-    if ( status) {
-        next();
-    } else {
-        res.status(400).json({ 
-            status: 400,
-            message: 'RSVP status required! [yes, no or maybe)'
-        });
-    }
+function validateUpvoteDownvoteQuestion(meetup) {
+    const schema = {
+        meetupId: Joi.number().positive().required()
+    };
+    return Joi.validate(meetup, schema);
+}
+
+function validateRSVP(rsvp) {
+    const schema = {
+        userId: Joi.number().positive().required(),
+        meetupId: Joi.number().positive().required(),
+        response: Joi.string().min(2).required()
+    };
+    return Joi.validate(rsvp, schema);
+}
+
+function validateSignIn(user) {
+    const schema = {
+        username: Joi.string().min(3).max(30).required(),
+        password: Joi.string().min(8).max(15).required()
+    };
+    return Joi.validate(user, schema);
+}
+
+function validateComment(comment) {
+    const schema = {
+        body: Joi.string().min(5).required(),
+        commentedBy: Joi.number().positive().required(),
+        questionId: Joi.number().positive().required()
+    };
+    return Joi.validate(comment, schema);
 }
 
 module.exports = {
     mustBeInteger,
+    validateSignUp,
+    validateSignIn,
     validateMeetup,
     validateQuestion,
-    validateRSVP
+    validateUpvoteDownvoteQuestion,
+    validateRSVP,
+    validateComment
 };
