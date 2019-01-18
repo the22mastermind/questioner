@@ -27,6 +27,13 @@ function createMeetup(req, res) {
 		tags: tags.split(', ')
 	};
 	meetups.meetups.push(newMeetup);
+	// if(res.status(500) || res.status(400)){
+	// 	res.status().json({
+	// 		status: res.status,
+	// 		error: error.details[0].message
+	// 	});
+	// 	return;
+	// }
 	res.status(201).json({
 		status: 201,
 		data: [{
