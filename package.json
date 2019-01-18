@@ -22,7 +22,7 @@
   },
   "scripts": {
     "test": "mocha --exit tests/*.js",
-    "start": "nodemon config/index.js"
+    "start": "node config/index.js"
   },
   "repository": {
     "type": "git",
