@@ -390,11 +390,12 @@ function downvoteQuestion(req, res) {
 		});
 		return;
 	}
-	const { meetupId } = req.body;
+	let meetupId = req.params.meetupId;
+	let questionId = req.params.questionId;
 	// Fetch meetup
 	const meetup = meetups.meetups.find(m => m.id === parseInt(meetupId, 10));
 	// Fetch question
-	const question = meetups.questions.find(q => q.id === parseInt(req.params.id, 10));
+	const question = meetups.questions.find(q => q.id === parseInt(questionId, 10));
 	// If not found, return 404
 	if (!meetup) {
 		res.status(404).json({
