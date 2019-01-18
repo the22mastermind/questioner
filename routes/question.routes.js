@@ -4,8 +4,8 @@ const router = express.Router();
 const controller = require('../controllers/controller');
 
 router.post('/:id/questions', controller.askQuestion);
-router.patch('/:meetupId/questions/:questionId/upvote', controller.upvoteQuestion);
-router.patch('/:meetupId/questions/:questionId/downvote', controller.downvoteQuestion);
-router.post('/:meetupId/questions/:questionId/comment', controller.commentOnQuestion);
+router.patch('/:id/questions/upvote', controller.upvoteQuestion);
+router.patch('/:id/questions/downvote', controller.downvoteQuestion);
+router.post('/:id/questions/comment', controller.commentOnQuestion);
 
 module.exports = router;
