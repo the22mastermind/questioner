@@ -91,3 +91,31 @@ describe('/GET upcoming meetups', () => {
 			});
 	});
 });
+
+// RSVP TO A MEETUP
+describe('/POST rsvp to a meetup', () => {
+	it('Should create rsvp to a meetup', () => {
+		const rsvp = {
+			userId: 1,
+			meetupId: 2,
+			response: 'Maybe',
+		};
+		chai.request(server)
+			.post('/api/v1/meetups/1/rsvps')
+			.send(rsvp)
+			.end((err, res) => {
+				if (res.body.error) {
+					res.should.have.status(404);
+					return;
+				}
+				res.should.have.status(201);
+				res.body.data.should.be.a('array');
+				res.body.data[0].should.have.property('userId');
+				res.body.data[0].should.have.property('meetupId');
+				res.body.data[0].should.have.property('response');
+				res.body.data[0].userId.should.be.a('integer');
+				res.body.data[0].meetupId.should.be.a('integer');
+				res.body.data[0].response.should.be.a('string');
+			});
+	});
+});

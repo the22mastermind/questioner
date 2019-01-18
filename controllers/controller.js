@@ -8,7 +8,7 @@ function createMeetup(req, res) {
 	if (error) {
 		res.status(400).json({
 			status: 400,
-			data: error.details[0].message
+			error: error.details[0].message
 		});
 		return;
 	}
@@ -103,7 +103,7 @@ function createUser(req, res) {
 	if (error) {
 		res.status(400).json({
 			status: 400,
-			data: error.details[0].message
+			error: error.details[0].message
 		});
 		return;
 	}
@@ -151,8 +151,8 @@ function login(req, res) {
 	// Find user
 	const user = meetups.users.find(u => u.username === username);
 	if (user) {
-		res.status(200).json({
-			status: 200,
+		res.status(201).json({
+			status: 201,
 			data: user
 		});
 	} else {
@@ -207,13 +207,13 @@ function passwordReset(req, res) {
 	}
 }
 
-// User ask question
+// User post question
 function askQuestion(req, res) {
 	const { error } = validator.validateQuestion(req.body);
 	if (error) {
 		res.status(400).json({
 			status: 400,
-			data: error.details[0].message
+			error: error.details[0].message
 		});
 		return;
 	}
@@ -221,9 +221,9 @@ function askQuestion(req, res) {
 	const {
 		title,
 		body,
-		createdBy,
-		meetupId
+		createdBy
 	} = req.body;
+	const meetupId = req.params.id;
 	const createdOn = new Date().toString();
 	// Find user
 	const user = meetups.users.find(u => u.id === parseInt(createdBy, 10));
@@ -232,7 +232,7 @@ function askQuestion(req, res) {
 	if (!user) {
 		res.status(404).json({
 			status: 404,
-			error: 'User not found. Please make sure you"re registered and logged in.'
+			error: 'User not found. Please make sure you are registered.'
 		});
 		return;
 	}
@@ -247,7 +247,7 @@ function askQuestion(req, res) {
 		id,
 		createdOn,
 		user: user.id,
-		meetup: meetup.id,
+		meetup: parseInt(meetupId, 10),
 		title,
 		body,
 		upvotes: 0,
@@ -318,24 +318,25 @@ function rsvpToMeetup(req, res) {
 // User upvote a question
 function upvoteQuestion(req, res) {
 	// Validation
-	const { error } = validator.validateUpvoteDownvoteQuestion(req.body);
+	const { error } = validator.validateUpvoteDownvoteQuestion(req.params);
 	if (error) {
 		res.status(400).json({
 			status: 400,
-			data: error.details[0].message
+			error: error.details[0].message
 		});
 		return;
 	}
-	const { meetupId } = req.body;
+	let meetupId = req.params.meetupId;
+	let questionId = req.params.questionId;
 	// Fetch meetup
-	const meetup = meetups.meetups.find(m => m.id === parseInt(meetupId, 10));
+	let meetup = meetups.meetups.find(m => m.id === parseInt(meetupId, 10));
 	// Fetch question
-	const question = meetups.questions.find(q => q.id === parseInt(req.params.id, 10));
+	let question = meetups.questions.find(q => q.id === parseInt(questionId, 10));
 	// If not found, return 404
 	if (!meetup) {
 		res.status(404).json({
 			status: 404,
-			error: 'Meetup not found.'
+			error: 'Meetup not found???'
 		});
 		return;
 	}
@@ -347,15 +348,33 @@ function upvoteQuestion(req, res) {
 		return;
 	}
 	// Increment question's votes by 1
-	question.upvotes += 1;
+	let index = meetups.questions.findIndex(q => q.id === parseInt(questionId, 10));
+	// console.log('>>> ', meetups.questions[index].upvotes);
+	let newVotes = helper.upVote(meetups.questions[index].upvotes);
+	
+	// console.log('INDEX: ', index);
+	// console.log('DATA: ', meetups.questions[index]);
+	meetups.questions[index] = {
+		id: meetups.questions[index].id,
+		createdOn: meetups.questions[index].createdOn,
+		user: meetups.questions[index].user,
+		meetup: meetups.questions[index].meetup,
+		title: meetups.questions[index].title,
+		body: meetups.questions[index].body,
+		upvotes: newVotes,
+		downvotes: meetups.questions[index].downvotes
+	};
+	// console.log("*********************");
+	// console.log(meetups.questions);
+	// const uodatedQuestion = meetups.questions.find(q => q.id === parseInt(questionId, 10));
 	// Return updated question
 	res.json({
 		status: 200,
 		data: [{
-			meetup: meetup.id,
+			meetup: meetupId,
 			title: question.title,
 			body: question.body,
-			votes: question.upvotes
+			votes: newVotes
 		}]
 	});
 }
@@ -411,19 +430,18 @@ function commentOnQuestion(req, res) {
 	if (error) {
 		res.status(400).json({
 			status: 400,
-			data: error.details[0].message
+			error: error.details[0].message
 		});
 		return;
 	}
 	const {
 		body,
-		commentedBy,
-		questionId
+		commentedBy
 	} = req.body;
 	// Fetch meetup
 	const user = meetups.users.find(u => u.id === parseInt(commentedBy, 10));
 	// Fetch question
-	const question = meetups.questions.find(q => q.id === parseInt(questionId, 10));
+	const question = meetups.questions.find(q => q.id === parseInt(req.params.questionId, 10));
 	// If not found, return 404
 	if (!user) {
 		res.status(404).json({
@@ -439,10 +457,9 @@ function commentOnQuestion(req, res) {
 		});
 		return;
 	}
-	const newCommentId = { id: helper.getNewId(meetups.comments) };
-	const commentedOn = {
-		commentedOn: new Date().toString()
-	};
+	const questionId = req.params.questionId;
+	const newCommentId = helper.getNewId(meetups.comments);
+	const commentedOn = new Date().toString();
 	const newComment = {
 		newCommentId,
 		commentedOn,

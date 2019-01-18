@@ -4,7 +4,7 @@ function validateSignUp(user) {
     const schema = {
         firstname: Joi.string().min(3).max(30).required(),
         lastname: Joi.string().min(3).max(30).required(),
-        othername: Joi.string().min(3).max(30).optional(),
+        othername: Joi.string().max(30).optional(),
         email: Joi.string().email().required(),
         phoneNumber: Joi.string().min(10).max(15).required(),
         username: Joi.string().min(3).max(30).required(),
@@ -26,19 +26,17 @@ function validateMeetup(meetup) {
 
 function validateQuestion(question) {
     const schema = {
-        // user: Joi.number().integer().required(),
-        // meetup: Joi.number().integer().required(),
         title: Joi.string().min(3).required(),
         body: Joi.string().min(5).required(),
-        createdBy: Joi.number().positive().required(),
-        meetupId: Joi.number().positive().required()
+        createdBy: Joi.number().positive().required()
     };
     return Joi.validate(question, schema);
 }
 
 function validateUpvoteDownvoteQuestion(meetup) {
     const schema = {
-        meetupId: Joi.number().positive().required()
+        meetupId: Joi.number().positive().required(),
+        questionId: Joi.number().positive().required()
     };
     return Joi.validate(meetup, schema);
 }
@@ -47,7 +45,7 @@ function validateRSVP(rsvp) {
     const schema = {
         userId: Joi.number().positive().required(),
         meetupId: Joi.number().positive().required(),
-        response: Joi.string().min(2).required()
+        response: Joi.string().min(2).max(8).required()
     };
     return Joi.validate(rsvp, schema);
 }
@@ -63,8 +61,7 @@ function validateSignIn(user) {
 function validateComment(comment) {
     const schema = {
         body: Joi.string().min(5).required(),
-        commentedBy: Joi.number().positive().required(),
-        questionId: Joi.number().positive().required()
+        commentedBy: Joi.number().positive().required()
     };
     return Joi.validate(comment, schema);
 }
