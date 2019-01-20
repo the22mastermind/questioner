@@ -190,10 +190,20 @@ function userProfile(req, res) {
 
 // User password reset
 function passwordReset(req, res) {
+	const { error } = validator.validatePasswordReset(req.body);
+	if (error) {
+		res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+		return;
+	}
 	const { username, password, confirmPassword } = req.body;
 	// Find user
 	const user = meetups.users.find(u => u.username === username);
 	if (password === confirmPassword) {
+		// console.log('P1: ', password);
+		// console.log('P2: ', confirmPassword);
 		if (user) {
 			res.status(200).json({
 				status: 200,
@@ -269,7 +279,7 @@ function askQuestion(req, res) {
 	}];
 	res.status(201).json({
 		status: 201,
-		data: savedQuestion
+		data: newQuestion
 	});
 }
 
@@ -333,20 +343,9 @@ function upvoteQuestion(req, res) {
 		});
 		return;
 	}
-	let meetupId = req.params.meetupId;
-	let questionId = req.params.questionId;
-	// Fetch meetup
-	let meetup = meetups.meetups.find(m => m.id === parseInt(meetupId, 10));
+	const id = req.params.id;
 	// Fetch question
-	let question = meetups.questions.find(q => q.id === parseInt(questionId, 10));
-	// If not found, return 404
-	if (!meetup) {
-		res.status(404).json({
-			status: 404,
-			error: 'Meetup not found???'
-		});
-		return;
-	}
+	const question = meetups.questions.find(q => q.id === parseInt(id, 10));
 	if (!question) {
 		res.status(404).json({
 			status: 404,
@@ -354,34 +353,16 @@ function upvoteQuestion(req, res) {
 		});
 		return;
 	}
-	// Increment question's votes by 1
-	let index = meetups.questions.findIndex(q => q.id === parseInt(questionId, 10));
-	// console.log('>>> ', meetups.questions[index].upvotes);
-	let newVotes = helper.upVote(meetups.questions[index].upvotes);
-	
-	// console.log('INDEX: ', index);
-	// console.log('DATA: ', meetups.questions[index]);
-	meetups.questions[index] = {
-		id: meetups.questions[index].id,
-		createdOn: meetups.questions[index].createdOn,
-		user: meetups.questions[index].user,
-		meetup: meetups.questions[index].meetup,
-		title: meetups.questions[index].title,
-		body: meetups.questions[index].body,
-		upvotes: newVotes,
-		downvotes: meetups.questions[index].downvotes
-	};
-	// console.log("*********************");
-	// console.log(meetups.questions);
-	// const uodatedQuestion = meetups.questions.find(q => q.id === parseInt(questionId, 10));
-	// Return updated question
+	// Increment question's upvotes by 1
+	question.upvotes += 1;
 	res.json({
 		status: 200,
 		data: [{
-			meetup: meetupId,
+			meetup: question.meetup,
 			title: question.title,
 			body: question.body,
-			votes: newVotes
+			upvotes: question.upvotes,
+			downvotes: question.downvotes
 		}]
 	});
 }
@@ -389,7 +370,7 @@ function upvoteQuestion(req, res) {
 // User downvote a question
 function downvoteQuestion(req, res) {
 	// Validation
-	const { error } = validator.validateUpvoteDownvoteQuestion(req.body);
+	const { error } = validator.validateUpvoteDownvoteQuestion(req.params);
 	if (error) {
 		res.status(400).json({
 			status: 400,
@@ -397,20 +378,9 @@ function downvoteQuestion(req, res) {
 		});
 		return;
 	}
-	let meetupId = req.params.meetupId;
-	let questionId = req.params.questionId;
-	// Fetch meetup
-	const meetup = meetups.meetups.find(m => m.id === parseInt(meetupId, 10));
+	const id = req.params.id;
 	// Fetch question
-	const question = meetups.questions.find(q => q.id === parseInt(questionId, 10));
-	// If not found, return 404
-	if (!meetup) {
-		res.status(404).json({
-			status: 404,
-			error: 'Meetup not found.'
-		});
-		return;
-	}
+	const question = meetups.questions.find(q => q.id === parseInt(id, 10));
 	if (!question) {
 		res.status(404).json({
 			status: 404,
@@ -418,16 +388,17 @@ function downvoteQuestion(req, res) {
 		});
 		return;
 	}
-	// Decrement question's votes by 1
-	question.downvotes -= 1;
-	// Return updated question
+	// Update question's downvotes by 1
+	question.downvotes += 1;
+	// Return updated question object
 	res.json({
 		status: 200,
 		data: [{
-			meetup: meetup.id,
+			meetup: question.meetup,
 			title: question.title,
 			body: question.body,
-			votes: question.downvotes
+			upvotes: question.upvotes,
+			downvotes: question.downvotes
 		}]
 	});
 }

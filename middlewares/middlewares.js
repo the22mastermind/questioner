@@ -35,8 +35,7 @@ function validateQuestion(question) {
 
 function validateUpvoteDownvoteQuestion(meetup) {
     const schema = {
-        meetupId: Joi.number().positive().required(),
-        questionId: Joi.number().positive().required()
+        id: Joi.number().positive().required()
     };
     return Joi.validate(meetup, schema);
 }
@@ -58,6 +57,14 @@ function validateSignIn(user) {
     return Joi.validate(user, schema);
 }
 
+function validatePasswordReset(credentials) {
+    const schema = {
+        username: Joi.string().min(3).max(30).required(),
+        password: Joi.string().min(8).max(15).required()
+    };
+    return Joi.validate(credentials, schema);
+}
+
 function validateComment(comment) {
     const schema = {
         body: Joi.string().min(5).required(),
@@ -73,5 +80,6 @@ module.exports = {
     validateQuestion,
     validateUpvoteDownvoteQuestion,
     validateRSVP,
-    validateComment
+    validateComment,
+    validatePasswordReset
 };
