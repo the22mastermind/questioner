@@ -5,15 +5,6 @@ const getNewId = (array) => {
     return 1;
 };
 
-const newDate = () => new Date().toString();
-
-const upVote = (integer) => {
-    return integer + 1;
-};
-
-
 module.exports = {
-    getNewId,
-    newDate,
-    upVote
+	getNewId
 };

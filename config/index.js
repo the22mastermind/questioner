@@ -1,7 +1,9 @@
-const express = require('express');
+import express from 'express';
+import router from '../routes/main.routes';
+
 const urlEncoded = require('body-parser').urlencoded({ extended: false });
 const bodyJson = require('body-parser').json();
-const path = require('path');
+import path from 'path';
 
 const app = express();
 const PORT = 3000;
@@ -9,7 +11,8 @@ const PORT = 3000;
 app.use(urlEncoded);
 app.use(bodyJson);
 
-app.use(require('../routes/main.routes'));
+// app.use(require('../routes/main.routes'));
+app.use(router);
 
 const rootDir = '../UI';
 app.use(express.static(path.join(__dirname, rootDir)));

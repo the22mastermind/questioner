@@ -1,9 +1,42 @@
-const chaiHttp = require('chai-http');
+require('babel-register');
 const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../config/index');
 
 const should = chai.should();
 chai.use(chaiHttp);
-const server = require('../config/index');
+
+// GET HOMEPAGE
+describe('/GET homepage', () => {
+	it('Should return the homepage', () => {
+		chai.request(server)
+			.get('/')
+			.end((err, res) => {
+				res.should.have.status(200);
+			});
+	});
+});
+
+// POST HOMEPAGE
+describe('/POST homepage', () => {
+	it('Should return a 400 error', () => {
+		chai.request(server)
+			.post('/')
+			.end((err, res) => {
+				res.should.have.status(404);
+			});
+	});
+});
+
+describe('/GET an invalid url', () => {
+	it('Should return a 404 error', () => {
+		chai.request(server)
+			.get('/api/v1/something')
+			.end((err, res) => {
+				res.should.have.status(404);
+			});
+	});
+});
 
 // CREATE A MEETUP
 describe('/POST create a new meetup', () => {
@@ -98,7 +131,7 @@ describe('/POST rsvp to a meetup', () => {
 		const rsvp = {
 			userId: 1,
 			meetupId: 2,
-			response: 'Maybe',
+			response: 'Maybe'
 		};
 		chai.request(server)
 			.post('/api/v1/meetups/1/rsvps')
@@ -116,6 +149,95 @@ describe('/POST rsvp to a meetup', () => {
 				res.body.data[0].userId.should.be.a('integer');
 				res.body.data[0].meetupId.should.be.a('integer');
 				res.body.data[0].response.should.be.a('string');
+			});
+	});
+});
+
+describe('/POST rsvp to a meetup', () => {
+	it('Should return status code 400', () => {
+		const rsvp = {
+			userId: 1,
+			meetupId: 2
+		};
+		chai.request(server)
+			.post('/api/v1/meetups/1/rsvps')
+			.send(rsvp)
+			.end((err, res) => {
+				res.should.have.status(400);
+			});
+	});
+});
+
+// UPDATE A MEETUP
+describe('/PATCH update a meetup', () => {
+	it('Should update a meetup', () => {
+		const meetup = {
+			topic: 'Andela Bootcamp',
+			location: 'Westerwelle Startup',
+			happeningOn: '01/22/2019',
+			tags: 'Git, Coding, someothertag'
+		};
+		chai.request(server)
+			.patch('/api/v1/meetups/1')
+			.send(meetup)
+			.end((err, res) => {
+				if (res.body.error) {
+					res.should.have.status(404);
+					return;
+				}
+				res.should.have.status(200);
+			});
+	});
+});
+
+describe('/PATCH update a meetup', () => {
+	it('Should return a status code 400', () => {
+		const meetup = {
+			topic: 'Andela Bootcamp'
+		};
+		chai.request(server)
+			.patch('/api/v1/meetups/1')
+			.send(meetup)
+			.end((err, res) => {
+				res.should.have.status(400);
+			});
+	});
+});
+
+// ADD TAGS TO A MEETUP
+describe('/POST add tags to a meetup', () => {
+	it('Should return status code 201', () => {
+		const tags = {
+			tags: 'Programming, WebDev, DevOps, RESTful API, Nodejs, ES6'
+		};
+		chai.request(server)
+			.patch('/api/v1/meetups/1/tags')
+			.send(tags)
+			.end((err, res) => {
+				if (res.body.error) {
+					res.should.have.status(404);
+					return;
+				}
+				res.should.have.status(201);
+				res.body.data.should.be.a('array');
+				res.body.data.should.have.property('meetup');
+				res.body.data.should.have.property('topic');
+				res.body.data.should.have.property('tags');
+				res.body.data.tags.should.be.a('array');
+			});
+	});
+});
+
+describe('/POST add tags to a meetup', () => {
+	it('Should return status code 400', () => {
+		const tags = {
+			tags: ''
+		};
+		chai.request(server)
+			.patch('/api/v1/meetups/1/tags')
+			.send(tags)
+			.end((err, res) => {
+				res.should.have.status(400);
 			});
 	});
 });

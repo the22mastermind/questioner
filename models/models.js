@@ -1,13 +1,15 @@
 const meetups = [];
 const questions = [];
 const comments = [];
+const replies = [];
 const rsvps = [];
 const users = [];
 
-module.exports = {
+export default {
 	meetups,
 	questions,
 	comments,
+	replies,
 	rsvps,
 	users
 };
