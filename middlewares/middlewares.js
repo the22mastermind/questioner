@@ -19,7 +19,8 @@ function validateMeetup(meetup) {
         topic: Joi.string().min(5).required(),
         location: Joi.string().min(5).required(),
         happeningOn: Joi.date().min('now').required(),
-        tags: Joi.string().max(80)
+        images: Joi.string().max(300).optional(),
+        tags: Joi.string().max(80).required()
     };
     return Joi.validate(meetup, schema);
 }
@@ -60,7 +61,8 @@ function validateSignIn(user) {
 function validatePasswordReset(credentials) {
     const schema = {
         username: Joi.string().min(3).max(30).required(),
-        password: Joi.string().min(8).max(15).required()
+        password: Joi.string().min(8).max(15).required(),
+        confirmPassword: Joi.string().min(8).max(15).required()
     };
     return Joi.validate(credentials, schema);
 }
@@ -73,6 +75,13 @@ function validateComment(comment) {
     return Joi.validate(comment, schema);
 }
 
+function validateTags(tags) {
+    const schema = {
+        tags: Joi.string().max(300).required()
+    };
+    return Joi.validate(tags, schema);
+}
+
 module.exports = {
     validateSignUp,
     validateSignIn,
@@ -81,5 +90,6 @@ module.exports = {
     validateUpvoteDownvoteQuestion,
     validateRSVP,
     validateComment,
-    validatePasswordReset
+    validatePasswordReset,
+    validateTags
 };

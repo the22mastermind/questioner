@@ -81,11 +81,17 @@ describe('/GET user profile/dashboard', () => {
 	});
 });
 
-// FETCH PASSWORD RESET PAGE
-describe('/GET user password reset', () => {
-	it('Should fetch user password reset', () => {
+// UPDATE PASSWORD OF A USER
+describe('/PUT user password reset', () => {
+	it('Should update password of a user', () => {
+		const user = {
+			username: 'johndoe',
+			password: 'complexpassword',
+			confirmPassword: 'complexpassword'
+		};
 		chai.request(server)
-			.get('/api/v1/users/password-reset')
+			.put('/api/v1/users/password-reset')
+			.send(user)
 			.end((err, res) => {
 				if (res.body.error) {
 					res.should.have.status(404);
@@ -93,8 +99,8 @@ describe('/GET user password reset', () => {
 				}
 				res.should.have.status(200);
 				res.body.should.be.a('object');
-				res.body.data[0].should.include.keys(
-					'email'
+				res.body.data.should.include.keys(
+					'id', 'firstname', 'lastname', 'email', 'isAdmin'
 				);
 			});
 	});
