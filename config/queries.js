@@ -86,7 +86,49 @@ function getSingleMeetup(req, res, next) {
 	}
 }
 
+function createMeetup(req, res, next) {
+	// Form validation
+	const { error } = validator.validateMeetup(req.body);
+	if (error) {
+		res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+		return;
+	}
+	const {
+		topic,
+		location,
+		happeningOn,
+		tags
+	} = req.body;
+	const newMeetup = {
+		createdOn: new Date(),
+		topic,
+		location,
+		happeningOn,
+		tags: tags.split(', ')
+	};
+	// Save newMeetup to db
+	db.none('insert into meetups(createdOn, topic, location, happeningOn, tags) values(${createdOn}, ${topic}, ${location}, ${happeningOn}, ${tags})', newMeetup)
+		.then(function () {
+			res.status(201).json({
+				status: 201,
+				data: [newMeetup]
+			});
+		})
+		.catch(function (err) {
+			// next(err);
+			res.status(404).json({
+				status: 404,
+				error: err.message
+			});
+			return;
+		});
+}
+
 export default {
 	getAllMeetups,
-	getSingleMeetup
+	getSingleMeetup,
+	createMeetup
 };

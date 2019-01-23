@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/', con.getAllMeetups);
 router.get('/:id', con.getSingleMeetup);
+router.post('/', con.createMeetup);
 
 export default router;
