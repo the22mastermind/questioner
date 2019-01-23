@@ -24,7 +24,69 @@ function getAllMeetups(req, res, next) {
 		});
 }
 
+function getSingleMeetup(req, res, next) {
+	if (req.params.id == 'upcoming') {
+		// Format today's date
+		let today = moment().format
+		// Fetch upcoming meetups with date greater than today
+		db.one('SELECT * FROM meetups WHERE happeningOn > ${today} ORDER BY happeningOn ASC')
+			.then(function (data) {
+				// console.log(data);
+				res.status(200).json({
+					status: 200,
+					data: data
+				});
+			})
+			.catch(function (err) {
+				// If not found, return not found message
+				// next(err);
+				res.status(404).json({
+					status: 404,
+					error: err.message
+				});
+				return;
+			});
+		// res.status(404).json({
+		// 	status: 404,
+		// 	error: '>>>> upcoming needs implementation here.'
+		// });
+		return;
+	} else {
+		const { id } = { id: req.params.id };
+		const parsedId = parseInt(id);
+		// console.log('Id: ', parsedId);
+		// console.log('Type: ', typeof parsedId);
+		// Check if id is an integer
+		if(Number.isInteger(parsedId)){
+			// Find single meetup
+			db.one('select * from meetups where id = $1', parsedId)
+				.then(function (data) {
+					// console.log(data);
+					res.status(200).json({
+						status: 200,
+						data: data
+					});
+				})
+				.catch(function (err) {
+					// If not found, return not found message
+					// next(err);
+					res.status(404).json({
+						status: 404,
+						error: err.message
+					});
+					return;
+				});
+		} else {
+			res.status(400).json({
+				status: 400,
+				error: 'Id is not integer.'
+			});
+			return;
+		}
+	}
+}
 
 export default {
-	getAllMeetups
+	getAllMeetups,
+	getSingleMeetup
 };
