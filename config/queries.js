@@ -24,6 +24,7 @@ function getAllMeetups(req, res, next) {
 		});
 }
 
+
 export default {
 	getAllMeetups
 };
