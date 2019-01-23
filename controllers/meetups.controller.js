@@ -41,7 +41,7 @@ function createMeetup(req, res) {
 
 // View all meetups
 function viewAllMeetups(req, res) {
-	return res.json({
+	res.json({
 		status: 200,
 		data: models.meetups
 	});

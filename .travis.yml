@@ -1,7 +1,23 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=bf76ce1ac44953cea57a7126024513ebae903876a46e66f3cf7fffaf380a2b8c
 language: node_js
 node_js:
   - "stable"
+addons:
+  code_climate:
+    repo_token: VtqlboDzQtYD9STgSe1QnuCvxB8Blaxbq
 cache:
   directories:
     - "node_modules"
-    
+before_script:
+  - npm install --save-dev coveralls
+  - npm install --save-dev istanbul
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+script:
+  - npm run coveralls
+after_script:
+  - coveralls < ./coverage/lcov.info
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

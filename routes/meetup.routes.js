@@ -1,14 +1,10 @@
 import express from 'express';
-import controller from '../controllers/meetups.controller';
+// import controller from '../controllers/meetups.controller';
+import con from '../config/queries';
 
 const router = express.Router();
 
-router.post('/', controller.createMeetup);
-router.get('/', controller.viewAllMeetups);
-router.get('/:id', controller.viewMeetupDetails);
-router.patch('/:id', controller.updateMeetup);
-router.delete('/:id', controller.deleteMeetup);
-router.post('/:id/rsvps', controller.rsvpToMeetup);
-router.patch('/:id/tags', controller.addTagsToMeetup);
+
+router.get('/', con.getAllMeetups);
 
 export default router;
