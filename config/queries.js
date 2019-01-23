@@ -27,9 +27,10 @@ function getAllMeetups(req, res, next) {
 function getSingleMeetup(req, res, next) {
 	if (req.params.id == 'upcoming') {
 		// Format today's date
-		let today = moment().format
+		let today = moment().format();
+		// console.log('>>>>> ', today);
 		// Fetch upcoming meetups with date greater than today
-		db.one('SELECT * FROM meetups WHERE happeningOn > ${today} ORDER BY happeningOn ASC')
+		db.any('SELECT * FROM meetups WHERE happeningon > $1', today)
 			.then(function (data) {
 				// console.log(data);
 				res.status(200).json({
@@ -50,7 +51,7 @@ function getSingleMeetup(req, res, next) {
 		// 	status: 404,
 		// 	error: '>>>> upcoming needs implementation here.'
 		// });
-		return;
+		// return;
 	} else {
 		const { id } = { id: req.params.id };
 		const parsedId = parseInt(id);
