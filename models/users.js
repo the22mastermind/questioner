@@ -1,4 +1,5 @@
 import moment from 'moment';
+import bcrypt from 'bcrypt';
 import validator from '../middlewares/middlewares';
 import pool from "../config/connection";
 
@@ -19,34 +20,43 @@ exports.createUser=(req,res)=>{
 	  			error: "username already exist"
 	  		});
 	  	}
-	  	const newUser={
-	  		username:req.body.username,
-	  		email:req.body.email,
-	  		password:req.body.password,
-	  		firstname:req.body.firstname,
-	  		lastname:req.body.lastname,
-	  		othername:req.body.othername,
-	  		phoneNumber:req.body.phoneNumber,
-	  		isAdmin:(req.body.isAdmin) ? req.body.isAdmin : false,
-	  		registered:moment().format('LLL')
-	  	};
-
-	    pool.query("INSERT INTO users(username,email,password,firstname,lastname,othername,phoneNumber,isAdmin,registered)"+
-	    	"VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
-	    	[newUser.username,newUser.email,newUser.password,newUser.firstname,
-	    	newUser.lastname,newUser.othername,newUser.phoneNumber,newUser.isAdmin,newUser.registered])
-	      .then(result=>{
-	          return res.status(201).json({
-	          	status: 201,
-	          	data:result.rows
-	          });
-	      })
-	      .catch(error=>{
-	      	return res.status(404).json({
-	  			status: 404,
-	  			error: error
-	  		});
-	      })
+	  	// Encrypt password
+	  	bcrypt.hash(req.body.password, 10, (err, hash) => {
+	  		if (err) {
+	  			return res.status(500).json({
+	  				status: 500,
+	  				error: err
+	  			});
+	  		} else {
+			  	const newUser={
+			  		username:req.body.username,
+			  		email:req.body.email,
+			  		password:hash,
+			  		firstname:req.body.firstname,
+			  		lastname:req.body.lastname,
+			  		othername:req.body.othername ? req.body.othername: ' ',
+			  		phoneNumber:req.body.phoneNumber,
+			  		isAdmin:(req.body.isAdmin) ? req.body.isAdmin : false,
+			  		registered:moment().format('LLL')
+			  	};
+			    pool.query("INSERT INTO users(username,email,password,firstname,lastname,othername,phoneNumber,isAdmin,registered)"+
+			    	"VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
+			    	[newUser.username,newUser.email,newUser.password,newUser.firstname,
+			    	newUser.lastname,newUser.othername,newUser.phoneNumber,newUser.isAdmin,newUser.registered])
+			      .then(result=>{
+			          return res.status(201).json({
+			          	status: 201,
+			          	data:result.rows
+			          });
+			      })
+			      .catch(error=>{
+			      	return res.status(404).json({
+			  			status: 404,
+			  			error: error
+			  		});
+			      })
+			}
+	  	});
 	})
 	.catch(error=>{
 		return res.status(404).json({
