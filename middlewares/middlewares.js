@@ -61,8 +61,7 @@ function validateSignIn(user) {
 function validatePasswordReset(credentials) {
     const schema = {
         username: Joi.string().min(3).max(30).required(),
-        password: Joi.string().min(8).max(15).required(),
-        confirmPassword: Joi.string().min(8).max(15).required()
+        password: Joi.string().min(8).max(15).required()
     };
     return Joi.validate(credentials, schema);
 }

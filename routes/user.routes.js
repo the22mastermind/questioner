@@ -1,11 +1,11 @@
 import express from 'express';
-import controller from '../controllers/users.controller';
+import con from '../models/users';
 
 const router = express.Router();
 
-router.post('/', controller.createUser);
-router.post('/login', controller.login);
-router.get('/profile', controller.userProfile);
-router.put('/password-reset', controller.passwordReset);
+router.post('/', con.createUser);
+// router.post('/login', controller.login);
+// router.get('/profile', controller.userProfile);
+// router.put('/password-reset', con.passwordReset);
 
 export default router;
