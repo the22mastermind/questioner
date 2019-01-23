@@ -43,8 +43,6 @@ function validateUpvoteDownvoteQuestion(meetup) {
 
 function validateRSVP(rsvp) {
     const schema = {
-        userId: Joi.number().positive().required(),
-        meetupId: Joi.number().positive().required(),
         response: Joi.string().min(2).max(8).required()
     };
     return Joi.validate(rsvp, schema);
