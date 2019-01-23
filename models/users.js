@@ -1,5 +1,6 @@
 import moment from 'moment';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import validator from '../middlewares/middlewares';
 import pool from "../config/connection";
 
@@ -106,6 +107,64 @@ exports.passwordReset=(req,res)=>{
 							});
 						})
 			    }
+		    });
+	    } else {
+	    	return res.status(404).json({
+				status: 404,
+				error: 'User does not exist.'
+			});
+	    }
+	})
+	.catch(error=>{
+		return res.status(404).json({
+			status: 404,
+			error: error
+		});
+	})
+}
+
+exports.login=(req,res)=>{
+	// Form validation
+	const { error } = validator.validatePasswordReset(req.body);
+	if (error) {
+		res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+		return;
+	}
+	pool.query("SELECT * FROM users WHERE username=$1",[req.body.username])
+	.then(user=>{
+	  	if(user.rows.length!==0){
+	  		// console.log(user.rows[0].password);
+	  		// Check user password
+		  	bcrypt.compare(req.body.password, user.rows[0].password, (err, result) => {
+		  		if (err) {
+		  			return res.status(401).json({
+		  				status: 401,
+		  				error: "Invalid username or password. Please try again."
+		  			});
+		  		} 
+		  		if (result) {
+		  			const token = jwt.sign(
+		  			{
+		  				email: user.rows[0].email,
+		  				userId: user.rows[0].id,
+		  			},
+		  			process.env.JWT_KEY,
+		  			{
+		  				expiresIn: "1h"
+		  			});
+		  			return res.status(200).json({
+						status: 200,
+						message: 'Welcome, ' + user.rows[0].firstname + '! You are now logged in.',
+						token: token
+					});
+			    }
+			    res.status(401).json({
+	  				status: 401,
+	  				error: "Invalid username or password. Please try again."
+	  			});
 		    });
 	    } else {
 	    	return res.status(404).json({

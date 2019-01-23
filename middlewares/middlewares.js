@@ -50,14 +50,6 @@ function validateRSVP(rsvp) {
     return Joi.validate(rsvp, schema);
 }
 
-function validateSignIn(user) {
-    const schema = {
-        username: Joi.string().min(3).max(30).required(),
-        password: Joi.string().min(8).max(15).required()
-    };
-    return Joi.validate(user, schema);
-}
-
 function validatePasswordReset(credentials) {
     const schema = {
         username: Joi.string().min(3).max(30).required(),
@@ -83,7 +75,6 @@ function validateTags(tags) {
 
 module.exports = {
     validateSignUp,
-    validateSignIn,
     validateMeetup,
     validateQuestion,
     validateUpvoteDownvoteQuestion,
