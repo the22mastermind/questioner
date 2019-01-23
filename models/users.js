@@ -66,48 +66,58 @@ exports.createUser=(req,res)=>{
 	})
 }
 
-// exports.passwordReset=(req,res)=>{
-// 	// Form validation
-// 	const { error } = validator.validatePasswordReset(req.body);
-// 	if (error) {
-// 		res.status(400).json({
-// 			status: 400,
-// 			error: error.details[0].message
-// 		});
-// 		return;
-// 	}
-// 	pool.query("SELECT username FROM users WHERE username=$1",[req.body.username])
-// 	.then(result=>{
-// 	  	if(result.rows.length!==0){
-// 		  	const newUser={
-// 		  		username:req.body.username,
-// 		  		password:req.body.password
-// 		  	};
+exports.passwordReset=(req,res)=>{
+	// Form validation
+	const { error } = validator.validatePasswordReset(req.body);
+	if (error) {
+		res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+		return;
+	}
+	pool.query("SELECT username FROM users WHERE username=$1",[req.body.username])
+	.then(result=>{
+	  	if(result.rows.length!==0){
+	  		// Encrypt password
+		  	bcrypt.hash(req.body.password, 10, (err, hash) => {
+		  		if (err) {
+		  			return res.status(500).json({
+		  				status: 500,
+		  				error: err
+		  			});
+		  		} else {
+				  	const newUser={
+				  		username:req.body.username,
+				  		password:hash
+				  	};
 
-// 		    pool.query("UPDATE users SET password=$1 WHERE username=$2",[newUser.password, newUser.username])
-// 		      .then(result=>{
-// 		          return res.status(200).json({
-// 		          	status: 200,
-// 		          	data: 'Password reset successful!'
-// 		          });
-// 		      })
-// 		      .catch(error=>{
-// 		      	return res.status(404).json({
-// 		  			status: 404,
-// 		  			error: error
-// 		  		});
-// 		      })
-// 	    } else {
-// 	    	return res.status(404).json({
-// 				status: 404,
-// 				error: 'User does not exist.'
-// 			});
-// 	    }
-// 	})
-// 	.catch(error=>{
-// 		return res.status(404).json({
-// 			status: 404,
-// 			error: error
-// 		});
-// 	})
-// }
+				    pool.query("UPDATE users SET password=$1 WHERE username=$2",[newUser.password, newUser.username])
+						.then(result=>{
+						  return res.status(200).json({
+						  	status: 200,
+						  	data: 'Password reset successful!'
+						  });
+						})
+						.catch(error=>{
+							return res.status(404).json({
+								status: 404,
+								error: error
+							});
+						})
+			    }
+		    });
+	    } else {
+	    	return res.status(404).json({
+				status: 404,
+				error: 'User does not exist.'
+			});
+	    }
+	})
+	.catch(error=>{
+		return res.status(404).json({
+			status: 404,
+			error: error
+		});
+	})
+}
