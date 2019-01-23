@@ -1,1 +1,1 @@
-web: node config/index.js
+web: node config/start.js

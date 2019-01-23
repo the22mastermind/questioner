@@ -6,7 +6,8 @@ const bodyJson = require('body-parser').json();
 import path from 'path';
 
 const app = express();
-const PORT = 3000;
+// const PORT = 3000;
+app.set('port', (process.env.PORT || 5000));
 
 app.use(urlEncoded);
 app.use(bodyJson);
@@ -22,8 +23,11 @@ app.get('/', (req, res) => {
     res.render('../UI/index.html');
 });
 
-app.listen(PORT, () => {
-console.log(`The app is listening on port: ${PORT}`);
+// app.listen(PORT, () => {
+// console.log(`The app is listening on port: ${PORT}`);
+// });
+app.listen(app.get('port'), () => {
+	console.log('App is running on port', app.get('port'));
 });
 
 module.exports = app;
