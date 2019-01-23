@@ -128,8 +128,68 @@ function createMeetup(req, res, next) {
 		});
 }
 
+function updateMeetup(req, res, next) {
+	// Validation
+	const { error } = validator.validateMeetup(req.body);
+	if (error) {
+		res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+		return;
+	}
+	const { id } = { id: req.params.id };
+		const parsedId = parseInt(id);
+		// Check if id is an integer
+		if(Number.isInteger(parsedId)){
+			const {
+				topic,
+				location,
+				happeningOn,
+				tags
+			} = req.body;
+			// let images = '';
+			// if (req.body.images) {
+			// 	// let images = req.body.images.split(', ');
+			// 	let images = req.body.images;
+			// }
+			const newMeetup = {
+				createdOn: new Date(),
+				topic,
+				location,
+				happeningOn,
+				tags: tags.split(', '),
+				id: parsedId
+			};
+			// Update meetup in db
+			db.none('update meetups set createdOn=${createdOn}, location=${location}, topic=${topic}, happeningOn=${happeningOn}, tags=${tags} where id=${id}', newMeetup)
+				.then(function () {
+					res.status(200).json({
+						status: 200,
+						data: [newMeetup]
+					});
+				})
+				.catch(function (err) {
+					// next(err);
+					// console.log(err.message);
+					res.status(404).json({
+						status: 404,
+						error: err.message
+					});
+					return;
+				});
+		} else {
+			res.status(400).json({
+				status: 400,
+				error: 'Id is not integer.'
+			});
+			return;
+		}
+}
+
 export default {
 	getAllMeetups,
 	getSingleMeetup,
-	createMeetup
+	createMeetup,
+	updateMeetup
 };
