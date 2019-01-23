@@ -187,9 +187,50 @@ function updateMeetup(req, res, next) {
 		}
 }
 
+function deleteMeetup(req, res, next) {
+	const { id } = { id: req.params.id };
+	const parsedId = parseInt(id);
+	// Check if id is an integer
+	if(Number.isInteger(parsedId)){
+		// Find single meetup
+		db.result('DELETE FROM meetups WHERE id = $1', [parsedId])
+			.then(function (result) {
+				if(result.rowCount === 0){
+					res.status(404).json({
+						status: 404,
+						error:"The meetup you are trying to delete does not exist."
+					});
+					return;
+				} else {
+					res.status(200).json({
+						status: 200,
+						data: 'Meetup deleted successfully.'
+					});
+					return;
+				}
+			})
+			.catch(function (err) {
+				// If not found, return not found message
+				// next(err);
+				res.status(404).json({
+					status: 404,
+					error: err.message
+				});
+				return;
+			});
+	} else {
+		res.status(400).json({
+			status: 400,
+			error: 'Id is not integer.'
+		});
+		return;
+	}
+}
+
 export default {
 	getAllMeetups,
 	getSingleMeetup,
 	createMeetup,
-	updateMeetup
+	updateMeetup,
+	deleteMeetup
 };

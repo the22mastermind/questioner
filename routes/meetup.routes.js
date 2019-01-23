@@ -8,5 +8,6 @@ router.get('/', con.getAllMeetups);
 router.get('/:id', con.getSingleMeetup);
 router.post('/', con.createMeetup);
 router.patch('/:id', con.updateMeetup);
+router.delete('/:id', con.deleteMeetup);
 
 export default router;
