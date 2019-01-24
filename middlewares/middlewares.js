@@ -28,8 +28,7 @@ function validateMeetup(meetup) {
 function validateQuestion(question) {
     const schema = {
         title: Joi.string().min(3).required(),
-        body: Joi.string().min(5).required(),
-        createdBy: Joi.number().positive().required()
+        body: Joi.string().min(5).required()
     };
     return Joi.validate(question, schema);
 }

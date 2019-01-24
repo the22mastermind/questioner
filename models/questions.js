@@ -1,0 +1,86 @@
+import moment from 'moment';
+import jwt from 'jsonwebtoken';
+import validator from '../middlewares/middlewares';
+import pool from "../config/connection";
+import authenticate from "../middlewares/check-auth";
+
+exports.askQuestion=(req, res) => {
+	// Form validation
+	const { error } = validator.validateQuestion(req.body);
+	if (error) {
+		return res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+	}
+	const { id } = { id: req.params.id };
+	if(Number.isInteger(parseInt(id))){
+	} else {
+		return res.status(400).json({
+			status: 400,
+			error: 'Id is not integer.'
+		});
+	}
+	// Check if meetup exists
+	pool.query("SELECT * FROM meetups WHERE id=$1",[req.params.id])
+	.then(meetup=>{
+	  	if(meetup.rows.length!==0){
+	  		// Retrieve userId from token
+	  		const token = req.headers.authorization.split(' ')[1];
+			const decoded = jwt.verify(token, process.env.JWT_KEY);
+			req.userData = decoded;
+			const newQuestion={
+          		createdon: moment().format('LLL'),
+          		createdby:req.userData.userId,
+          		meetup:req.params.id,
+		  		title:req.body.title,
+		  		body:req.body.body,
+		  		upvotes:0,
+		  		downvotes:0
+		  	};
+	  		// Persist rsvp to db
+	  		pool.query("INSERT INTO questions(createdon,createdby,meetup,title,body,upvotes,downvotes)" +
+	  			"VALUES($1,$2,$3,$4,$5,$6,$7) returning *", 
+		    	[
+			    	newQuestion.createdon,
+			    	newQuestion.createdby,
+			    	newQuestion.meetup,
+			    	newQuestion.title,
+			    	newQuestion.body,
+			    	newQuestion.upvotes,
+			    	newQuestion.downvotes
+		    	])
+			.then(result=>{
+			  return res.status(201).json({
+			  	status: 201,
+			  	data:[
+			  		{
+			  			user: req.userData.userId,
+			  			meetup: req.params.id,
+			  			title: req.body.title,
+				  		body: req.body.body
+			  		}
+			  	]
+			  });
+			})
+			.catch(error=>{
+				return res.status(404).json({
+					status: 404,
+					error: error,
+					message: 'Insert failed...............'
+				});
+			})
+	  	} else {
+	  		return res.status(404).json({
+				status: 404,
+				error: 'Meetup of id: ' + req.params.id + ' not found.'
+			});
+	  	}
+	})
+	.catch(error=>{
+		return res.status(404).json({
+			status: 404,
+			error: error
+		});
+	})
+}
