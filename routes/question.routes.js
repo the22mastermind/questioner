@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/:id/questions', authenticate, controller.askQuestion);
 router.patch('/:id/questions/upvote', authenticate, controller.upvoteQuestion);
-// router.patch('/:id/questions/downvote', controller.downvoteQuestion);
+router.patch('/:id/questions/downvote', authenticate, controller.downvoteQuestion);
 // router.post('/:id/questions/comment', controller.commentOnQuestion);
 // router.post('/:id/questions/comment/respond', controller.replyToComment);
 
