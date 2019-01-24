@@ -1,16 +1,21 @@
 import express from 'express';
 import router from '../routes/main.routes';
 
-const urlEncoded = require('body-parser').urlencoded({ extended: false });
-const bodyJson = require('body-parser').json();
+// import urlEncoded from ('body-parser').urlencoded({ extended: false });
+// import bodyJson from ('body-parser').json();
+import bodyParser from 'body-parser';
 import path from 'path';
 
 const app = express();
 // const PORT = 3000;
 app.set('port', (process.env.PORT || 5000));
 
-app.use(urlEncoded);
-app.use(bodyJson);
+// app.use(urlEncoded);
+// app.use(bodyJson);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: false
+}));
 
 // app.use(require('../routes/main.routes'));
 app.use(router);
@@ -30,4 +35,5 @@ app.listen(app.get('port'), () => {
 	console.log('App is running on port', app.get('port'));
 });
 
-module.exports = app;
+// module.exports = app;
+export default app;

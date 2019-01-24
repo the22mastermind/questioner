@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 function validateSignUp(user) {
     const schema = {
@@ -57,8 +57,7 @@ function validatePasswordReset(credentials) {
 
 function validateComment(comment) {
     const schema = {
-        body: Joi.string().min(5).required(),
-        commentedBy: Joi.number().positive().required()
+        body: Joi.string().min(5).required()
     };
     return Joi.validate(comment, schema);
 }
@@ -70,7 +69,7 @@ function validateTags(tags) {
     return Joi.validate(tags, schema);
 }
 
-module.exports = {
+export default {
     validateSignUp,
     validateMeetup,
     validateQuestion,

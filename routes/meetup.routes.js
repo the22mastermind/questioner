@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.get('/', con.getAllMeetups);
 router.get('/:id', con.getSingleMeetup);
-router.post('/', con.createMeetup);
-router.patch('/:id', con.updateMeetup);
-router.delete('/:id', con.deleteMeetup);
+router.post('/', authenticate, con.createMeetup);
+router.patch('/:id', authenticate, con.updateMeetup);
+router.delete('/:id', authenticate, con.deleteMeetup);
 router.post('/:id/rsvps', authenticate, rsvp.rsvpToMeetup);
 
 export default router;
