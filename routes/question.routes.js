@@ -6,7 +6,7 @@ import authenticate from "../middlewares/check-auth";
 const router = express.Router();
 
 router.post('/:id/questions', authenticate, controller.askQuestion);
-// router.patch('/:id/questions/upvote', controller.upvoteQuestion);
+router.patch('/:id/questions/upvote', authenticate, controller.upvoteQuestion);
 // router.patch('/:id/questions/downvote', controller.downvoteQuestion);
 // router.post('/:id/questions/comment', controller.commentOnQuestion);
 // router.post('/:id/questions/comment/respond', controller.replyToComment);

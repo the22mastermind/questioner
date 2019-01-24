@@ -84,3 +84,68 @@ exports.askQuestion=(req, res) => {
 		});
 	})
 }
+
+exports.upvoteQuestion=(req, res) => {
+	// Form validation
+	const { error } = validator.validateUpvoteDownvoteQuestion(req.params);
+	if (error) {
+		return res.status(400).json({
+			status: 400,
+			error: error.details[0].message
+		});
+	}
+	const { id } = { id: req.params.id };
+	if(!Number.isInteger(parseInt(id))){
+		return res.status(400).json({
+			status: 400,
+			error: 'Id is not integer.'
+		});
+	}
+	// Check if meetup exists
+	pool.query("SELECT * FROM questions WHERE id=$1",[req.params.id])
+	.then(question=>{
+	  	if(question.rows.length!==0){
+			// Compute new upvote
+			let upvoted = question.rows[0].upvotes + 1;
+			const newVote={
+          		upvotes: upvoted,
+          		questionId: req.params.id
+		  	};
+	  		// Persist rsvp to db
+	  		pool.query("UPDATE questions SET upvotes=$1 WHERE id=$2", [newVote.upvotes, newVote.questionId])
+			.then(result=>{
+			  return res.status(200).json({
+			  	status: 200,
+			  	data:[
+			  		{
+			  			meetup: question.rows[0].meetup,
+			  			title: question.rows[0].title,
+			  			body: question.rows[0].body,
+			  			upvotes: upvoted,
+			  			downvotes: question.rows[0].downvotes
+			  		}
+			  	]
+			  });
+			})
+			.catch(error=>{
+				return res.status(404).json({
+					status: 404,
+					error: error,
+					message: 'Update failed...............'
+				});
+			})
+	  	} else {
+	  		return res.status(404).json({
+				status: 404,
+				error: 'Question of id: ' + req.params.id + ' not found.'
+			});
+	  	}
+	})
+	.catch(error=>{
+		return res.status(404).json({
+			status: 404,
+			error: error
+		});
+	})
+}
+
