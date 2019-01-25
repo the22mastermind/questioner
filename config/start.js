@@ -9,3 +9,5 @@ require('babel-core/register');
 require('babel-polyfill');
 require('./index');
 require('../routes/main.routes');
+require('../database');
+// require('../tests/meetups');

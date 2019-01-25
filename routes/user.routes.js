@@ -3,7 +3,7 @@ import con from '../models/users';
 
 const router = express.Router();
 
-router.post('/', con.createUser);
+router.post('/signup', con.createUser);
 router.post('/login', con.login);
 router.put('/password-reset', con.passwordReset);
 

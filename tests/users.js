@@ -1,9 +1,10 @@
-const chaiHttp = require('chai-http');
-const chai = require('chai');
+import chaiHttp from 'chai-http';
+import chai from 'chai';
 
 const should = chai.should();
 chai.use(chaiHttp);
-const server = require('../config/index');
+
+import server from '../config/index';
 
 // CREATE A USER
 describe('/POST create a new user', () => {

@@ -9,7 +9,7 @@ function validateSignUp(user) {
         phoneNumber: Joi.string().min(10).max(15).required(),
         username: Joi.string().min(3).max(30).required(),
         password: Joi.string().min(8).max(15).required(),
-        isAdmin: Joi.boolean().required()
+        isAdmin: Joi.boolean().optional(),
     };
     return Joi.validate(user, schema);
 }
@@ -35,7 +35,8 @@ function validateQuestion(question) {
 
 function validateUpvoteDownvoteQuestion(meetup) {
     const schema = {
-        id: Joi.number().positive().required()
+        mId: Joi.number().positive().required(),
+        qId: Joi.number().positive().required()
     };
     return Joi.validate(meetup, schema);
 }
@@ -49,7 +50,15 @@ function validateRSVP(rsvp) {
 
 function validatePasswordReset(credentials) {
     const schema = {
-        username: Joi.string().min(3).max(30).required(),
+        email: Joi.string().min(3).max(50).required(),
+        password: Joi.string().min(8).max(15).required()
+    };
+    return Joi.validate(credentials, schema);
+}
+
+function validateLogin(credentials) {
+    const schema = {
+        username: Joi.string().min(3).max(50).required(),
         password: Joi.string().min(8).max(15).required()
     };
     return Joi.validate(credentials, schema);
@@ -71,6 +80,7 @@ function validateTags(tags) {
 
 export default {
     validateSignUp,
+    validateLogin,
     validateMeetup,
     validateQuestion,
     validateUpvoteDownvoteQuestion,

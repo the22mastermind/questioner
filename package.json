@@ -17,25 +17,33 @@
     "bcrypt": "^3.0.3",
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "express-generator": "^4.16.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.4.0",
+    "make-runnable": "^1.3.6",
     "moment": "^2.24.0",
+    "pg": "^7.8.0",
     "pg-promise": "^5.9.7"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
+    "coveralls": "^3.0.2",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9"
   },
   "scripts": {
-    "test": "mocha --exit tests/*.js",
-    "start": "nodemon config/start.js"
+    "test": "mocha --exec babel-node --exit tests/*.js",
+    "start": "nodemon --exec babel-node ./config/start.js",
+    "db": "babel-node ./database createTables",
+    "cover": "istanbul cover _mocha -- --compilers js:babel-register tests/*.js",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
