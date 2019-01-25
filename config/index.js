@@ -8,7 +8,7 @@ import path from 'path';
 
 const app = express();
 // const PORT = 3000;
-app.set('port', (process.env.PORT || 5000));
+const port = process.env.PORT || 5000;
 
 // app.use(urlEncoded);
 // app.use(bodyJson);
@@ -31,9 +31,8 @@ app.get('/', (req, res) => {
 // app.listen(PORT, () => {
 // console.log(`The app is listening on port: ${PORT}`);
 // });
-app.listen(app.get('port'), () => {
-	console.log('App is running on port', app.get('port'));
-});
+app.listen(port)
+console.log('App is running on port ', port);
 
 // module.exports = app;
 export default app;
