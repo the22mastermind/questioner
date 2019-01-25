@@ -1,5 +1,4 @@
 /node_modules
-/UI
 npm-debug.log
 .DS_Store
 /*.env
