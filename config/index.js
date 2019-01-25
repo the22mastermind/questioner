@@ -20,13 +20,13 @@ app.use(bodyParser.urlencoded({
 // app.use(require('../routes/main.routes'));
 app.use(router);
 
-const rootDir = '../UI';
-app.use(express.static(path.join(__dirname, rootDir)));
+// const rootDir = '../UI';
+// app.use(express.static(path.join(__dirname, rootDir)));
 
-// Welcome route
-app.get('/', (req, res) => {
-    res.render('../UI/index.html');
-});
+// // Welcome route
+// app.get('/', (req, res) => {
+//     res.render('../UI/index.html');
+// });
 
 // app.listen(PORT, () => {
 // console.log(`The app is listening on port: ${PORT}`);
