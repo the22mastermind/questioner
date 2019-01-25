@@ -1,8 +1,14 @@
 import { Pool } from "pg";
 import Keys from "./keys";
 
-const connection=new Pool({
+
+let connection;
+if (process.env.DATABASE_URL) {
+	connection = new Pool({connectionString: process.env.DATABASE_URL});
+} else {
+	connection =new Pool({
 	connectionString:Keys.databaseURI
 });
+}
 
 module.exports=connection;
