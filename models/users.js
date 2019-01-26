@@ -14,8 +14,14 @@ exports.createUser = async function(req, res) {
 			error: error.details[0].message
 		});
 	}
-	// const checker = checkEmptySpaces(req.body);
-	// console.log('///////////', checker);
+	// Check for whitespaces in form
+	const spaceChecker = checkEmptySpaces.checkSpaces(req.body);
+	if (spaceChecker) {
+		return res.status(400).json({
+			status: 400,
+			error: spaceChecker.error
+		});
+	}
 	// Check if user exists
 	const user = await pool.query("SELECT * FROM users WHERE email=$1 or phonenumber=$2",[req.body.email, req.body.phoneNumber]);
   	if (user.rows.length!==0) {
@@ -26,7 +32,7 @@ exports.createUser = async function(req, res) {
   	}
 
   	// Encrypt password
-  	bcrypt.hash(req.body.password, 10, (err, hash) => {
+  	bcrypt.hash(req.body.password.trim(), 10, (err, hash) => {
   		if (err) {
   			return res.status(500).json({
   				status: 500,
@@ -34,13 +40,13 @@ exports.createUser = async function(req, res) {
   			});
   		} else {
 		  	const newUser = {
-		  		username: req.body.username,
-		  		email: req.body.email,
+		  		username: req.body.username.trim(),
+		  		email: req.body.email.trim(),
 		  		password: hash,
-		  		firstname: req.body.firstname,
-		  		lastname: req.body.lastname,
+		  		firstname: req.body.firstname.trim(),
+		  		lastname: req.body.lastname.trim(),
 		  		othername: req.body.othername ? req.body.othername: ' ',
-		  		phoneNumber: req.body.phoneNumber,
+		  		phoneNumber: req.body.phoneNumber.trim(),
 		  		isAdmin: (req.body.isAdmin) ? req.body.isAdmin : false,
 		  		registered: moment().format('LLL')
 		  	};

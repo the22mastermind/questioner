@@ -1,19 +1,54 @@
-module.exports = (req, res, next) => {
+exports.checkSpaces = function (req) {
 	try {
-		console.log(req);
-		// req.firstname.focus();
-		console.log('///', req.firstname.trim());
-		console.log('----', req.firstname.trim().length === 0);
-
-		if (req.username.trim().length ===0) {
-			return 'Empty spaces not allowed. Please check username and try again.';
+		// console.log(req);
+		if (req.username.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check username and try again.'
+			}
+			return response;
 		}
-		next();
+		if (req.firstname.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check firstname and try again.'
+			}
+			return response;
+		}
+		if (req.lastname.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check lastname and try again.'
+			}
+			return response;
+		}
+		if (req.email.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check email and try again.'
+			}
+			return response;
+		}
+		if (req.phoneNumber.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check phoneNumber and try again.'
+			}
+			return response;
+		}
+		if (req.password.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check password and try again.'
+			}
+			return response;
+		}
 	} catch (error) {
-		console.log(error);
-		return res.status(400).json({
-			status: 400,
+		// console.log(error);
+		const response = {
+			status: 500,
 			error: error
-		});
+		};
+		return response;
 	}
 }
