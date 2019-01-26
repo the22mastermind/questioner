@@ -14,8 +14,8 @@ exports.createUser = async function(req, res) {
 			error: error.details[0].message
 		});
 	}
-	const checker = checkEmptySpaces(req.body);
-	console.log('///////////', checker);
+	// const checker = checkEmptySpaces(req.body);
+	// console.log('///////////', checker);
 	// Check if user exists
 	const user = await pool.query("SELECT * FROM users WHERE email=$1 or phonenumber=$2",[req.body.email, req.body.phoneNumber]);
   	if (user.rows.length!==0) {
