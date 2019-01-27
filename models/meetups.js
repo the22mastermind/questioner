@@ -1,16 +1,12 @@
 import moment from 'moment';
-import validator from '../middlewares/middlewares';
 import jwt from 'jsonwebtoken';
-import pool from "../config/connection";
-import authenticate from "../middlewares/check-auth";
+import pool from '../config/connection';
+import authenticate from '../middlewares/check-auth';
+import validator from '../middlewares/middlewares';
+import checkEmptySpaces from '../middlewares/custom-validator';
+
 
 exports.getAllMeetups = async function(req, res) {
-	// const token = req.headers.authorization.split(' ')[1];
-	// const decoded = jwt.verify(token, process.env.JWT_KEY);
-	// req.userData = decoded;
-	// const { adminId } = { adminId: req.userData.userId };
-	// // Fetch all meetups by admin
-	// const meetups = await pool.query('SELECT * FROM meetups WHERE createdby=$1 ORDER BY createdon ASC', [adminId]);
 	const meetups = await pool.query('SELECT * FROM meetups ORDER BY createdon DESC');
 	return res.status(200).json({
 		status: 200,
@@ -19,9 +15,9 @@ exports.getAllMeetups = async function(req, res) {
 }
 
 exports.getSingleMeetup = async function(req, res) {
-	if (req.params.id == 'upcoming') {
+	if (req.params.id === 'upcoming') {
 		// Format today's date
-		let { today } = { today: moment().format() };
+		const { today } = { today: moment().format() };
 		try {
 			// Fetch upcoming meetups
 			const meetup = await pool.query('SELECT * FROM meetups WHERE happeningon > $1', [today]);
@@ -36,7 +32,7 @@ exports.getSingleMeetup = async function(req, res) {
 					error: 'No upcoming meetup at the moment.'
 				});
 			}
-		} catch(error) {
+		} catch (error) {
 			return res.status(404).json({
 				status: 404,
 				error: error
@@ -44,10 +40,10 @@ exports.getSingleMeetup = async function(req, res) {
 		}
 	} else {
 		const { id } = { id: req.params.id };
-		const parsedId = parseInt(id);
+		const parsedId = parseInt(id, 10);
 
 		// Check if id is an integer
-		if(Number.isInteger(parsedId)){
+		if(Number.isInteger(parsedId)) {
 			// Find single meetup
 			const meetup = await pool.query('SELECT * FROM meetups WHERE id = $1', [id]);
 			if (meetup.rows.length !== 0) {
@@ -55,12 +51,11 @@ exports.getSingleMeetup = async function(req, res) {
 					status: 200,
 					data: meetup.rows
 				});
-			} else {
-				return res.status(404).json({
-					status: 404,
-					error: 'Meetup not found.'
-				});
 			}
+			return res.status(404).json({
+				status: 404,
+				error: 'Meetup not found.'
+			});
 		} else {
 			return res.status(400).json({
 				status: 400,
@@ -84,18 +79,31 @@ exports.createMeetup = async function(req, res) {
 	const decoded = jwt.verify(token, process.env.JWT_KEY);
 	req.userData = decoded;
 
-	const {
-		topic,
-		location,
-		happeningOn,
-		tags
-	} = req.body;
+	// Check for whitespaces in form
+	const spaceChecker = checkEmptySpaces.meetupChecker(req.body);
+	if (spaceChecker) {
+		return res.status(400).json({
+			status: 400,
+			error: spaceChecker.error
+		});
+	}
+
+	// console.log(req.body.happeningOn.trim());
+	// const dd = new Date(req.body.happeningOn.trim());
+	// console.log('+++ ', moment(dd).format('LLLL'));
+
+	// const start = Date.now();
+	// const diff = dd - start;
+	// const h = moment.duration(diff, 'milliseconds');
+	// console.log(h.days());
+	// console.log(h.hours());
+
 	const newMeetup = {
 		createdOn: moment().format('LLL'),
-		topic,
-		location,
-		happeningOn,
-		tags: tags.split(', '),
+		topic: req.body.topic.trim(),
+		location: req.body.location.trim(),
+		happeningOn: req.body.happeningOn.trim(),
+		tags: req.body.tags.trim().split(', '),
 		createdby: req.userData.userId
 	};
 
@@ -125,7 +133,7 @@ exports.createMeetup = async function(req, res) {
 	} catch (error) {
 		return res.status(404).json({
 			status: 404,
-			error: 'Insert failed. ' + error.message
+			error: 'Error: ' + error.message
 		});
 	}
 

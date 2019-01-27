@@ -1,8 +1,7 @@
 import express from 'express';
-// import controller from '../controllers/meetups.controller';
 import con from '../models/meetups';
 import rsvp from '../models/rsvps';
-import authenticate from "../middlewares/check-auth";
+import authenticate from '../middlewares/check-auth';
 
 const router = express.Router();
 

@@ -52,3 +52,50 @@ exports.checkSpaces = function (req) {
 		return response;
 	}
 }
+
+exports.meetupChecker = function (req) {
+	try {
+		const {
+			topic,
+			location,
+			happeningOn,
+			tags
+		} = req;
+
+		if (topic.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check topic and try again.'
+			}
+			return response;
+		}
+		if (location.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check location and try again.'
+			}
+			return response;
+		}
+		if (happeningOn.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check happeningOn and try again.'
+			}
+			return response;
+		}
+		if (tags.trim().length === 0) {
+			const response = {
+				status: 400,
+				error: 'Empty spaces not allowed. Please check tags and try again.'
+			}
+			return response;
+		}
+	} catch (error) {
+		const response = {
+			status: 500,
+			error: error
+		};
+		return response;
+	}
+}
+

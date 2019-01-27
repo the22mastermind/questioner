@@ -29,7 +29,7 @@ const createTables = () => {
       othername varchar (50) NOT NULL,
       email varchar (80) UNIQUE NOT NULL,
       phoneNumber varchar (15) UNIQUE NOT NULL,
-      username varchar (30) NOT NULL,
+      username varchar (30) UNIQUE NOT NULL,
       password varchar NOT NULL,
       registered timestamptz,
       isAdmin boolean DEFAULT FALSE
@@ -51,7 +51,7 @@ const createTables = () => {
       createdBy int REFERENCES users ON DELETE CASCADE,
       meetup int REFERENCES meetups ON DELETE CASCADE,
       title varchar (30) NOT NULL,
-      body varchar (30) NOT NULL,
+      body varchar (150) NOT NULL,
       upvotes int NOT NULL,
       downvotes int NOT NULL
     );`;
@@ -60,7 +60,7 @@ const createTables = () => {
       id serial PRIMARY KEY,
       commentedOn timestamptz,
       question int REFERENCES questions ON DELETE CASCADE,
-      body varchar (100) NOT NULL,
+      body varchar (150) NOT NULL,
       commentedBy int REFERENCES users ON DELETE CASCADE
     );`;
   const queryReplies =
@@ -68,7 +68,7 @@ const createTables = () => {
       id serial PRIMARY KEY,
       repliedOn timestamptz,
       comment int REFERENCES comments ON DELETE CASCADE,
-      body varchar (100) NOT NULL,
+      body varchar (150) NOT NULL,
       commentedBy int REFERENCES users ON DELETE CASCADE
     );`;
   const queryRsvps =
@@ -79,6 +79,15 @@ const createTables = () => {
       response varchar (5) NOT NULL,
       PRIMARY KEY (meetup, userId)
     );`;
+  const queryVotes =
+    `CREATE TABLE votes (
+      id serial PRIMARY KEY,
+      questionId int REFERENCES questions ON DELETE CASCADE,
+      userId int REFERENCES users ON DELETE CASCADE,
+      upvoted boolean DEFAULT false,
+      downvoted boolean DEFAULT false
+    );`;
+
 
   const con = `
     ${queryUsers}; 
@@ -87,6 +96,7 @@ const createTables = () => {
     ${queryComments}; 
     ${queryReplies}; 
     ${queryRsvps};
+    ${queryVotes};
   `;
   
   pool.query(con)

@@ -13,6 +13,6 @@ const router = express.Router();
 
 router.use('/api/v1/meetups', meetupRoutes);
 router.use('/api/v1/meetups', questionRoutes);
-router.use('/api/v1/users/auth', userRoutes);
+router.use('/api/v1/users', userRoutes);
 
 export default router;
