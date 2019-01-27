@@ -10,6 +10,6 @@ router.patch('/:mId/questions/:qId/upvote', authenticate, controller.upvoteQuest
 router.patch('/:mId/questions/:qId/downvote', authenticate, controller.downvoteQuestion);
 router.post('/:mId/questions/:qId/comment', authenticate, controller.commentOnQuestion);
 router.get('/:mId/questions/:qId/comment', authenticate, controller.getComments);
-// router.post('/:id/questions/comment/respond', controller.replyToComment);
+router.post('/:mId/questions/:qId/comment/:cId/respond', authenticate, controller.replyToComment);
 
 export default router;

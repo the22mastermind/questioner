@@ -28,6 +28,7 @@
     "pg-promise": "^5.9.7"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.2.5",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "coveralls": "^3.0.2",
@@ -40,8 +41,8 @@
     "nyc": "^13.1.0"
   },
   "scripts": {
-    "test": "nyc mocha tests/*.js",
-    "start": "node ./config/start.js",
+    "test": "nyc mocha --babel-node tests/*.js",
+    "start": "nodemon ./config/start.js",
     "db": "babel-node ./database createTables",
     "cover": "istanbul cover _mocha -- --compilers js:babel-register tests/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

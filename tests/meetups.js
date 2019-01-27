@@ -7,36 +7,32 @@ const { expect } = chai.expect;
 chai.use(chaiHttp);
 
 // GET HOMEPAGE
-describe('/GET homepage', () => {
-	it('Should return the homepage', () => {
+export const loginTest = async() => {
+	return request.post('/api/v1/users/auth/login')
+		.send({ 'username': 'kamanzi', 'password': 'kamanzi@kamanzi' })
+		.expect(200);
+};
+
+// POST HOMEPAGE
+describe('/POST homepage', () => {
+	it('Should return a 400 error', () => {
 		chai.request(server)
-			.get('/')
+			.post('/')
 			.end((err, res) => {
-				res.should.have.status(200);
+				res.should.have.status(404);
 			});
 	});
 });
 
-// // POST HOMEPAGE
-// describe('/POST homepage', () => {
-// 	it('Should return a 400 error', () => {
-// 		chai.request(server)
-// 			.post('/')
-// 			.end((err, res) => {
-// 				res.should.have.status(404);
-// 			});
-// 	});
-// });
-
-// describe('/GET an invalid url', () => {
-// 	it('Should return a 404 error', () => {
-// 		chai.request(server)
-// 			.get('/api/v1/something')
-// 			.end((err, res) => {
-// 				res.should.have.status(404);
-// 			});
-// 	});
-// });
+describe('/GET an invalid url', () => {
+	it('Should return a 404 error', () => {
+		chai.request(server)
+			.get('/api/v1/something')
+			.end((err, res) => {
+				res.should.have.status(404);
+			});
+	});
+});
 
 // // CREATE A MEETUP
 // describe('/POST create a new meetup', () => {

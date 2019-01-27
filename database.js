@@ -88,7 +88,6 @@ const createTables = () => {
       downvoted boolean DEFAULT false
     );`;
 
-
   const con = `
     ${queryUsers}; 
     ${queryMeetups}; 
@@ -101,11 +100,11 @@ const createTables = () => {
   
   pool.query(con)
     .then((res) => {
-      console.log('...', res);
+      console.log(res);
       pool.end();
     })
     .catch((err) => {
-      console.log('+++ ', err);
+      console.log(err);
       pool.end();
     });
 

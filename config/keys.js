@@ -1,5 +1,5 @@
-const Keys={
-	databaseURI:"postgres://postgres:rastafari@localhost:5432/questioner"
-}
+const Keys = {
+	databaseURI: 'postgres://postgres:rastafari@localhost:5432/questioner'
+};
 
-module.exports=Keys;
+export default Keys;

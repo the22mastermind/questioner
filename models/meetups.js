@@ -6,15 +6,15 @@ import validator from '../middlewares/middlewares';
 import checkEmptySpaces from '../middlewares/custom-validator';
 
 
-exports.getAllMeetups = async function(req, res) {
+exports.getAllMeetups = async function (req, res) {
 	const meetups = await pool.query('SELECT * FROM meetups ORDER BY createdon DESC');
 	return res.status(200).json({
 		status: 200,
 		data: meetups.rows
 	});
-}
+};
 
-exports.getSingleMeetup = async function(req, res) {
+exports.getSingleMeetup = async function (req, res) {
 	if (req.params.id === 'upcoming') {
 		// Format today's date
 		const { today } = { today: moment().format() };
@@ -22,16 +22,15 @@ exports.getSingleMeetup = async function(req, res) {
 			// Fetch upcoming meetups
 			const meetup = await pool.query('SELECT * FROM meetups WHERE happeningon > $1', [today]);
 			if (meetup.rows.length !== 0) {
-				res.status(200).json({
+				return res.status(200).json({
 					status: 200,
 					data: meetup.rows
 				});
-			} else {
-				res.status(404).json({
-					status: 404,
-					error: 'No upcoming meetup at the moment.'
-				});
 			}
+			return res.status(404).json({
+				status: 404,
+				error: 'No upcoming meetup at the moment.'
+			});
 		} catch (error) {
 			return res.status(404).json({
 				status: 404,
@@ -43,7 +42,7 @@ exports.getSingleMeetup = async function(req, res) {
 		const parsedId = parseInt(id, 10);
 
 		// Check if id is an integer
-		if(Number.isInteger(parsedId)) {
+		if (Number.isInteger(parsedId)) {
 			// Find single meetup
 			const meetup = await pool.query('SELECT * FROM meetups WHERE id = $1', [id]);
 			if (meetup.rows.length !== 0) {
@@ -56,16 +55,15 @@ exports.getSingleMeetup = async function(req, res) {
 				status: 404,
 				error: 'Meetup not found.'
 			});
-		} else {
-			return res.status(400).json({
-				status: 400,
-				error: 'Id is not integer.'
-			});
 		}
+		return res.status(400).json({
+			status: 400,
+			error: 'Id is not integer.'
+		});
 	}
-}
+};
 
-exports.createMeetup = async function(req, res) {
+exports.createMeetup = async function (req, res) {
 	// Form validation
 	const { error } = validator.validateMeetup(req.body);
 	if (error) {
@@ -117,8 +115,7 @@ exports.createMeetup = async function(req, res) {
 				newMeetup.happeningOn,
 				newMeetup.tags,
 				newMeetup.createdby,
-			]
-		);
+			]);
 		return res.status(201).json({
 			status: 201,
 			data: [
@@ -130,16 +127,15 @@ exports.createMeetup = async function(req, res) {
 				}
 			]
 		});
-	} catch (error) {
+	} catch (err) {
 		return res.status(404).json({
 			status: 404,
-			error: 'Error: ' + error.message
+			error: err.message
 		});
 	}
+};
 
-}
-
-exports.updateMeetup = async function(req, res) {
+exports.updateMeetup = async function (req, res) {
 	// Validation
 	const { error } = validator.validateMeetup(req.body);
 	if (error) {
@@ -158,10 +154,10 @@ exports.updateMeetup = async function(req, res) {
 		id: req.params.id,
 		adminId: req.userData.userId
 	};
-	const parsedId = parseInt(credentials.id);
+	const parsedId = parseInt(credentials.id, 10);
 
 	// Check if id is an integer
-	if(Number.isInteger(parsedId)){
+	if (Number.isInteger(parsedId)) {
 		// Check if meetup exist
 		const meetup = await pool.query('SELECT * FROM meetups WHERE id=$1', [credentials.id]);
 		if (meetup.rows.length === 0) {
@@ -169,7 +165,7 @@ exports.updateMeetup = async function(req, res) {
 				status: 404,
 				error: 'Meetup not found.'
 			});
-		} 
+		}
 		const {
 			topic,
 			location,
@@ -186,18 +182,26 @@ exports.updateMeetup = async function(req, res) {
 		};
 		// Update meetup in db
 		try {
-			const update = await pool.query('UPDATE meetups SET createdon=$1, location=$2, topic=$3, happeningon=$4, tags=$5 where id=$6 returning *',
-				[newMeetup.createdOn, newMeetup.location, newMeetup.topic, newMeetup.happeningOn, newMeetup.tags, newMeetup.id]);
+			const update = await pool.query('UPDATE meetups SET createdon=$1, location=$2,'
+				+ ' topic=$3, happeningon=$4, tags=$5 where id=$6 returning *',
+				[
+					newMeetup.createdOn,
+					newMeetup.location,
+					newMeetup.topic,
+					newMeetup.happeningOn,
+					newMeetup.tags,
+					newMeetup.id
+				]);
 			return res.status(200).json({
 				status: 200,
 				data: update.rows,
 				message: 'Meetup updated successfully!'
 
 			});
-		} catch(error) {
+		} catch (err) {
 			return res.status(404).json({
 				status: 404,
-				error: error
+				error: err
 			});
 		}
 	} else {
@@ -206,13 +210,13 @@ exports.updateMeetup = async function(req, res) {
 			error: 'Id is not integer.'
 		});
 	}
-}
+};
 
-exports.deleteMeetup = async function(req, res) {
+exports.deleteMeetup = async function (req, res) {
 	const { id } = { id: req.params.id };
-	const parsedId = parseInt(id);
+	const parsedId = parseInt(id, 10);
 	// Check if id is an integer
-	if(Number.isInteger(parsedId)){
+	if (Number.isInteger(parsedId)) {
 		// Check if meetup exists
 		const meetup = await pool.query('SELECT * FROM meetups WHERE id=$1', [parsedId]);
 		if (meetup.rows.length === 0) {
@@ -232,7 +236,7 @@ exports.deleteMeetup = async function(req, res) {
 		} catch (error) {
 			return res.status(404).json({
 				status: 404,
-				error:"The meetup you are trying to delete does not exist."
+				error: 'The meetup you are trying to delete does not exist.'
 			});
 		}
 	} else {
@@ -241,4 +245,4 @@ exports.deleteMeetup = async function(req, res) {
 			error: 'Id is not integer.'
 		});
 	}
-}
+};
